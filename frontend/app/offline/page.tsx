@@ -21,7 +21,8 @@ import {
   Lightbulb,
   Building,
   Target,
-  Palette
+  Palette,
+  ChevronDown
 } from 'lucide-react'
 
 const FADE_UP = {
@@ -135,6 +136,8 @@ const SERVICE_PACKAGES = [
 
 export default function OfflinePage() {
   const [expandedService, setExpandedService] = useState<string | null>(null)
+  const [activeSpecializedTeam, setActiveSpecializedTeam] = useState<string>(SPECIALIZED_TEAMS[0].name)
+  const [activeServicePackage, setActiveServicePackage] = useState<string>(SERVICE_PACKAGES[0].name)
 
   return (
     <div className="relative w-full min-h-screen bg-background text-foreground font-sans selection:bg-purple-600 selection:text-foreground overflow-x-hidden">
@@ -259,11 +262,53 @@ export default function OfflinePage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Desktop View */}
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {SPECIALIZED_TEAMS.map((team) => (
               <div
                 key={team.name}
                 className="p-8 border border-border bg-card space-y-4 hover:border-primary transition-colors flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="text-[10px] font-mono text-primary uppercase tracking-wider">
+                    {team.role}
+                  </div>
+                  <h3 className="text-xl font-bold uppercase text-foreground">
+                    {team.name}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+                    {team.desc}
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-border text-[10px] font-mono text-primary uppercase">
+                  Active Deployment Ready
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile View Dropdown */}
+          <div className="block md:hidden space-y-4">
+            <div className="relative">
+              <select
+                value={activeSpecializedTeam}
+                onChange={(e) => setActiveSpecializedTeam(e.target.value)}
+                className="w-full appearance-none bg-card border border-border text-foreground px-4 py-3 pr-10 text-sm font-bold uppercase focus:outline-none focus:border-primary font-mono cursor-pointer"
+              >
+                {SPECIALIZED_TEAMS.map(team => (
+                  <option key={team.name} value={team.name}>{team.name}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-muted-foreground">
+                <ChevronDown className="w-4 h-4" />
+              </div>
+            </div>
+
+            {SPECIALIZED_TEAMS.filter(t => t.name === activeSpecializedTeam).map((team) => (
+              <div
+                key={team.name}
+                className="p-8 border border-border bg-card space-y-4 hover:border-primary transition-colors flex flex-col justify-between animate-in fade-in"
               >
                 <div className="space-y-3">
                   <div className="text-[10px] font-mono text-primary uppercase tracking-wider">
@@ -300,11 +345,72 @@ export default function OfflinePage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Desktop View */}
+          <div className="hidden md:grid md:grid-cols-3 gap-8">
             {SERVICE_PACKAGES.map((pkg) => (
               <div
                 key={pkg.name}
                 className="p-8 border border-border bg-card space-y-6 hover:border-primary transition-colors flex flex-col justify-between"
+              >
+                <div className="space-y-4">
+                  <span className="text-[10px] font-mono px-2.5 py-1 bg-secondary border border-border text-muted-foreground uppercase tracking-wider inline-block">
+                    {pkg.timeline}
+                  </span>
+
+                  <h3 className="text-2xl font-bold uppercase text-foreground">
+                    {pkg.name}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+                    {pkg.desc}
+                  </p>
+
+                  <div className="pt-4 space-y-2 border-t border-border">
+                    <span className="text-[10px] font-mono text-primary uppercase tracking-wider block mb-2">
+                      Included Scope:
+                    </span>
+                    {pkg.deliverables.map((item) => (
+                      <div key={item} className="flex items-start gap-2 text-xs text-muted-foreground font-light">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-6 border-t border-border">
+                  <Link
+                    href="/grow-with-us"
+                    className="w-full py-3 bg-white hover:bg-purple-50 text-purple-950 font-bold text-xs uppercase tracking-wider text-center block transition-colors"
+                  >
+                    Book This Package &rarr;
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile View Dropdown */}
+          <div className="block md:hidden space-y-4">
+            <div className="relative">
+              <select
+                value={activeServicePackage}
+                onChange={(e) => setActiveServicePackage(e.target.value)}
+                className="w-full appearance-none bg-card border border-border text-foreground px-4 py-3 pr-10 text-sm font-bold uppercase focus:outline-none focus:border-primary font-mono cursor-pointer"
+              >
+                {SERVICE_PACKAGES.map(pkg => (
+                  <option key={pkg.name} value={pkg.name}>{pkg.name}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-muted-foreground">
+                <ChevronDown className="w-4 h-4" />
+              </div>
+            </div>
+
+            {SERVICE_PACKAGES.filter(p => p.name === activeServicePackage).map((pkg) => (
+              <div
+                key={pkg.name}
+                className="p-8 border border-border bg-card space-y-6 hover:border-primary transition-colors flex flex-col justify-between animate-in fade-in"
               >
                 <div className="space-y-4">
                   <span className="text-[10px] font-mono px-2.5 py-1 bg-secondary border border-border text-muted-foreground uppercase tracking-wider inline-block">

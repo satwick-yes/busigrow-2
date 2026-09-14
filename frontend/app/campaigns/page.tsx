@@ -17,7 +17,8 @@ import {
   Check,
   X,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  ChevronDown
 } from 'lucide-react'
 
 const STANDARD_INCLUSIONS = [
@@ -80,6 +81,7 @@ const PARKED_DOMAINS = [
 export default function CampaignsPage() {
   const [activeBrandModal, setActiveBrandModal] = useState<typeof IN_HOUSE_BRANDS[0] | null>(null)
   const [expandedInclusion, setExpandedInclusion] = useState<string | null>(null)
+  const [activeParkedDomain, setActiveParkedDomain] = useState<string>(PARKED_DOMAINS[0].domain)
 
   return (
     <div className="relative w-full min-h-screen bg-background text-foreground font-sans selection:bg-purple-600 selection:text-foreground overflow-x-hidden">
@@ -275,11 +277,64 @@ export default function CampaignsPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Desktop View */}
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {PARKED_DOMAINS.map((d) => (
               <div
                 key={d.domain}
                 className="p-6 border border-border bg-card space-y-4 hover:border-primary transition-colors flex flex-col justify-between font-mono"
+              >
+                <div>
+                  <div className="flex items-center justify-between text-[10px] text-primary mb-2">
+                    <span className="text-muted-foreground flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+                      AVAILABLE FOR DNS ROUTING
+                    </span>
+                    <Globe className="w-3.5 h-3.5 text-primary" />
+                  </div>
+                  <h4 className="text-lg font-bold text-foreground font-mono">
+                    {d.domain}
+                  </h4>
+                  <p className="text-xs text-muted-foreground mt-1 font-sans">
+                    {d.niche}
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-border flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground font-bold font-mono">{d.price}</span>
+                  <Link
+                    href="/grow-with-us"
+                    className="text-xs text-muted-foreground hover:text-foreground uppercase tracking-wider inline-flex items-center gap-1"
+                  >
+                    <span>Acquire</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile View Dropdown */}
+          <div className="block md:hidden space-y-4">
+            <div className="relative">
+              <select
+                value={activeParkedDomain}
+                onChange={(e) => setActiveParkedDomain(e.target.value)}
+                className="w-full appearance-none bg-card border border-border text-foreground px-4 py-3 pr-10 text-sm font-bold uppercase focus:outline-none focus:border-primary font-mono cursor-pointer"
+              >
+                {PARKED_DOMAINS.map(d => (
+                  <option key={d.domain} value={d.domain}>{d.domain}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-muted-foreground">
+                <ChevronDown className="w-4 h-4" />
+              </div>
+            </div>
+
+            {PARKED_DOMAINS.filter(d => d.domain === activeParkedDomain).map((d) => (
+              <div
+                key={d.domain}
+                className="p-6 border border-border bg-card space-y-4 hover:border-primary transition-colors flex flex-col justify-between font-mono animate-in fade-in"
               >
                 <div>
                   <div className="flex items-center justify-between text-[10px] text-primary mb-2">
