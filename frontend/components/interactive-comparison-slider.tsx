@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Sparkles, ArrowLeftRight, CheckCircle2, XCircle } from 'lucide-react'
+import { Sparkles, ArrowLeftRight, CheckCircle2, XCircle, Check, X } from 'lucide-react'
 
 export function InteractiveComparisonSlider() {
   const [sliderPosition, setSliderPosition] = useState(50)
@@ -13,7 +13,7 @@ export function InteractiveComparisonSlider() {
     if (!containerRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
     const x = clientX - rect.left
-    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100))
+    const percentage = Math.max(5, Math.min(95, (x / rect.width) * 100))
     setSliderPosition(percentage)
   }
 
@@ -28,20 +28,20 @@ export function InteractiveComparisonSlider() {
   }
 
   return (
-    <div className="w-full rounded-3xl border border-purple-200/60 dark:border-purple-900/50 bg-card/85 backdrop-blur-2xl p-6 sm:p-10 space-y-6 shadow-[0_0_50px_rgba(139,92,246,0.12)]">
+    <div className="w-full rounded-3xl border border-purple-200/60 dark:border-purple-900/50 bg-card/90 backdrop-blur-xl p-5 sm:p-8 md:p-10 space-y-6 shadow-sm">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-6 border-b border-purple-200/50 dark:border-purple-900/40">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-purple-200/50 dark:border-purple-900/40">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-xs font-mono text-purple-700 dark:text-purple-300 mb-2 font-light">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-950/60 text-xs font-medium text-purple-700 dark:text-purple-300 mb-2 border border-purple-200/60 dark:border-purple-800/40">
             <ArrowLeftRight className="w-3.5 h-3.5" />
-            <span>GROUND_TRANSFORMATION_AUDIT</span>
+            <span>Why Single-Source Execution Matters</span>
           </div>
           <h3 className="text-2xl sm:text-3xl font-light tracking-tight text-foreground">
-            Fragmented Vendors vs. Unified Busigrow Execution
+            Multiple Fragmented Vendors vs. Busigrow
           </h3>
         </div>
-        <div className="text-xs font-mono font-light text-muted-foreground">
-          Drag slider horizontally to compare
+        <div className="text-xs text-muted-foreground font-normal bg-purple-50/50 dark:bg-purple-950/40 px-3 py-1.5 rounded-full border border-purple-200/40 dark:border-purple-800/40 self-start sm:self-auto">
+          Drag slider to compare &harr;
         </div>
       </div>
 
@@ -52,60 +52,79 @@ export function InteractiveComparisonSlider() {
         onTouchMove={handleTouchMove}
         onMouseDown={() => setIsDragging(true)}
         onMouseUp={() => setIsDragging(false)}
-        className="relative w-full h-80 sm:h-96 rounded-2xl overflow-hidden cursor-ew-resize select-none border border-purple-200/60 dark:border-purple-800/60"
+        className="relative w-full h-[380px] sm:h-[340px] rounded-2xl overflow-hidden cursor-ew-resize select-none border border-purple-200/60 dark:border-purple-800/60"
       >
-        {/* RIGHT (AFTER): Busigrow Unified Stack */}
-        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#0c0520] via-[#1a0b3b] to-[#0d0622] p-8 flex flex-col justify-between items-end text-right text-white">
+        {/* RIGHT (AFTER): Busigrow Unified Standard */}
+        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#12072e] via-[#1a0c3b] to-[#0e0524] p-5 sm:p-8 flex flex-col justify-between items-end text-right text-white">
           <div className="flex items-center justify-between w-full">
-            <span className="text-xs font-mono font-light text-purple-300">24-48h NCR Delivery</span>
-            <span className="px-3 py-1 rounded-full bg-purple-500/30 border border-purple-400 text-purple-200 text-xs font-mono font-normal shadow-[0_0_15px_rgba(168,85,247,0.5)] flex items-center gap-1.5">
-              WITH BUSIGROW 6.0 UNIFIED STACK
+            <span className="text-xs font-mono text-purple-300">Noida Direct Factory</span>
+            <span className="px-3 py-1 rounded-full bg-purple-500/30 border border-purple-400 text-purple-200 text-xs font-medium shadow-sm flex items-center gap-1.5">
+              <span>WITH BUSIGROW</span>
               <CheckCircle2 className="w-3.5 h-3.5 text-purple-300" />
             </span>
           </div>
 
-          <div className="space-y-3 max-w-md">
-            <h4 className="text-2xl sm:text-3xl font-light text-white tracking-tight leading-snug drop-shadow-md">
-              3D Cast Acrylic Signage + Sub-Second Next.js Platform + Automated CRM
+          <div className="space-y-2.5 max-w-sm sm:max-w-md">
+            <h4 className="text-xl sm:text-2xl font-light text-white tracking-tight leading-snug">
+              Single Point of Contact. Zero Quality Loss.
             </h4>
             <p className="text-xs sm:text-sm text-purple-200/80 leading-relaxed font-light">
-              100% Pantone color consistency, factory direct UV flatbed fabrication in Noida, single point of contact, and 3.8x higher inbound customer conversion.
+              Your 3D signage matches your website branding with exact Pantone color codes, manufactured in our own Noida facility and deployed with automated WhatsApp lead capture.
             </p>
           </div>
 
-          <div className="flex gap-4 text-[11px] font-mono font-light text-purple-300">
-            <div>0 Middlemen &bull;</div>
-            <div>100/100 Lighthouse &bull;</div>
-            <div>Direct WhatsApp API</div>
+          <div className="grid grid-cols-3 gap-2 text-left w-full max-w-sm sm:max-w-md pt-3 border-t border-purple-500/20 text-xs text-purple-200">
+            <div className="flex items-center gap-1">
+              <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span>24-48h Delivery</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span>100% Color Match</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+              <span>Full Accountability</span>
+            </div>
           </div>
         </div>
 
-        {/* LEFT (BEFORE): Fragmented 6-Vendor Chaos (Clipped by slider) */}
+        {/* LEFT (BEFORE): Fragmented Vendors (Clipped by slider, fully responsive without fixed width) */}
         <div
-          className="absolute inset-0 h-full bg-gradient-to-br from-zinc-900 via-neutral-900 to-zinc-950 border-r-2 border-purple-400 shadow-[0_0_30px_rgba(168,85,247,0.6)]"
+          className="absolute inset-0 h-full bg-gradient-to-br from-zinc-900 via-neutral-900 to-zinc-950 border-r-2 border-purple-400 shadow-[0_0_25px_rgba(168,85,247,0.5)]"
           style={{ width: `${sliderPosition}%`, overflow: 'hidden' }}
         >
-          <div className="w-[1000px] h-full flex flex-col justify-between p-8 text-zinc-400">
+          {/* Inner content matches container width using absolute full width */}
+          <div className="w-full h-full min-w-[300px] flex flex-col justify-between p-5 sm:p-8 text-zinc-300">
             <div className="flex items-center gap-2">
-              <span className="px-3 py-1 rounded-full bg-purple-900/40 border border-purple-700/50 text-purple-300 text-xs font-mono font-normal flex items-center gap-1.5">
-                <XCircle className="w-3.5 h-3.5" />
-                THE FRAGMENTED 6-VENDOR DISCONNECT
+              <span className="px-3 py-1 rounded-full bg-zinc-800/90 border border-zinc-700 text-zinc-300 text-xs font-medium flex items-center gap-1.5">
+                <XCircle className="w-3.5 h-3.5 text-rose-400" />
+                <span>MULTIPLE VENDORS</span>
               </span>
             </div>
 
-            <div className="space-y-3 max-w-md">
-              <h4 className="text-2xl sm:text-3xl font-light text-zinc-300 tracking-tight leading-snug">
-                Mismatched Colors, Blown Opening Deadlines, Slow WP Plugins
+            <div className="space-y-2.5 max-w-sm sm:max-w-md">
+              <h4 className="text-xl sm:text-2xl font-light text-zinc-200 tracking-tight leading-snug">
+                Mismatched Colors & Blown Opening Deadlines
               </h4>
               <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-light">
-                Juggling 5 freelance vendors, local sign printers without design taste, delayed delivery trucks, and no attribution tracking for ad spend.
+                Juggling separate sign fabricators, freelance web developers, and marketing agencies creates finger-pointing, brand inconsistency, and costly project delays.
               </p>
             </div>
 
-            <div className="grid grid-cols-3 gap-2 text-[11px] font-mono font-light text-zinc-500">
-              <div>&bull; 4-6 Weeks Delay</div>
-              <div>&bull; Mismatched Hex Codes</div>
-              <div>&bull; Zero Accountability</div>
+            <div className="grid grid-cols-3 gap-2 text-left w-full max-w-sm sm:max-w-md pt-3 border-t border-zinc-800 text-xs text-zinc-400">
+              <div className="flex items-center gap-1">
+                <X className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                <span>4-6 Wks Delay</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <X className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                <span>Wrong Brand Colors</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <X className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                <span>No Ownership</span>
+              </div>
             </div>
           </div>
         </div>
@@ -115,8 +134,8 @@ export function InteractiveComparisonSlider() {
           className="absolute top-0 bottom-0 w-1 bg-purple-400 -translate-x-1/2 pointer-events-none flex items-center justify-center"
           style={{ left: `${sliderPosition}%` }}
         >
-          <div className="w-8 h-8 rounded-full bg-purple-600 text-white shadow-[0_0_20px_rgba(168,85,247,0.9)] flex items-center justify-center border-2 border-white">
-            <ArrowLeftRight className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-full bg-purple-600 text-white shadow-[0_0_15px_rgba(168,85,247,0.8)] flex items-center justify-center border-2 border-white">
+            <ArrowLeftRight className="w-3.5 h-3.5" />
           </div>
         </div>
       </div>

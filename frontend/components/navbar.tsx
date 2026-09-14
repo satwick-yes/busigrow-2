@@ -3,16 +3,16 @@
 import React, { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X, ArrowUpRight, Sparkles } from "lucide-react"
+import { Menu, X, ArrowUpRight, Phone, MessageSquare } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 const NAV_LINKS = [
-  { label: "Online", href: "/online" },
-  { label: "Offline", href: "/offline" },
-  { label: "Automations", href: "/automations" },
-  { label: "Campaigns", href: "/campaigns" },
-  { label: "BusiMag", href: "/busimag" },
-  { label: "About", href: "/about" },
+  { label: "offline pages", href: "/offline" },
+  { label: "online pages", href: "/online" },
+  { label: "automation", href: "/automations" },
+  { label: "campaigns", href: "/campaigns" },
+  { label: "BizMag", href: "/busimag" },
+  { label: "about", href: "/about" },
 ]
 
 export function Navbar() {
@@ -21,76 +21,80 @@ export function Navbar() {
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/"
-    if (href === "/online") return pathname === "/online" || pathname === "/services"
     if (href === "/offline") return pathname === "/offline" || pathname === "/offline-marketing"
+    if (href === "/online") return pathname === "/online" || pathname === "/services"
     if (href === "/automations") return pathname === "/automations" || pathname === "/platform"
     if (href === "/campaigns") return pathname === "/campaigns" || pathname === "/tailored"
+    if (href === "/busimag") return pathname.startsWith("/busimag")
+    if (href === "/about") return pathname === "/about"
     return pathname.startsWith(href)
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-purple-200/40 dark:border-purple-900/40 transition-colors">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#0c0716]/95 backdrop-blur-md border-b border-purple-100 dark:border-purple-900/50 transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative w-8 h-8 rounded-lg overflow-hidden border border-purple-500/30 flex items-center justify-center font-normal text-xs shadow-[0_0_15px_rgba(139,92,246,0.3)] group-hover:scale-105 transition-transform duration-300">
+          <div className="w-8 h-8 rounded-lg overflow-hidden border border-purple-200 dark:border-purple-800 bg-purple-950 flex items-center justify-center shadow-sm">
             <img src="/logo.jpg" alt="Busigrow" className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-purple-600/10 pointer-events-none" />
           </div>
-          <div className="flex items-center gap-2">
-            <span className="font-normal text-base tracking-tight text-foreground group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+          <div className="flex flex-col">
+            <span className="font-semibold text-base tracking-tight text-zinc-900 dark:text-zinc-100 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
               Busigrow
             </span>
-            <span className="text-[10px] font-mono font-light px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-300/40 dark:border-purple-800/50">
-              v6.0
+            <span className="text-[10px] text-purple-600 dark:text-purple-400 font-medium tracking-wide uppercase">
+              Growth &amp; Fabrication Studio
             </span>
           </div>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-1.5 p-1 rounded-full bg-purple-50/50 dark:bg-purple-950/30 border border-purple-200/50 dark:border-purple-900/40 backdrop-blur-md">
+        <nav className="hidden lg:flex items-center gap-1 px-3 py-1.5 rounded-full bg-purple-50/60 dark:bg-purple-950/40 border border-purple-200/60 dark:border-purple-900/60">
           {NAV_LINKS.map((link) => {
             const active = isActive(link.href)
             return (
               <Link
                 key={link.label}
                 href={link.href}
-                className={`relative text-xs font-normal px-3.5 py-1.5 rounded-full transition-all duration-300 ${
+                className={`relative text-xs font-medium px-3.5 py-1.5 rounded-full transition-all ${
                   active
-                    ? "text-white font-normal"
-                    : "text-muted-foreground hover:text-foreground hover:bg-purple-100/50 dark:hover:bg-purple-900/30"
+                    ? "text-purple-900 dark:text-white bg-white dark:bg-purple-900/80 shadow-sm border border-purple-200/50 dark:border-purple-700/50"
+                    : "text-zinc-600 dark:text-purple-200/80 hover:text-purple-700 dark:hover:text-white"
                 }`}
               >
-                {active && (
-                  <motion.div
-                    layoutId="activeNavTab"
-                    className="absolute inset-0 bg-gradient-to-r from-purple-600 to-violet-600 rounded-full shadow-[0_0_15px_rgba(124,58,237,0.4)]"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">{link.label}</span>
+                {link.label}
               </Link>
             )
           })}
         </nav>
 
-        {/* Right CTA */}
-        <div className="flex items-center gap-3">
-          <Link
-            href="/contact"
-            className="hidden sm:inline-flex items-center gap-2 text-xs font-normal px-4 py-2 rounded-full bg-gradient-to-r from-purple-600 via-purple-700 to-violet-700 text-white shadow-[0_0_20px_rgba(124,58,237,0.35)] hover:shadow-[0_0_25px_rgba(124,58,237,0.6)] hover:scale-105 active:scale-95 transition-all duration-300"
+        {/* Right Actions */}
+        <div className="flex items-center gap-2.5">
+          <a
+            href="https://wa.me/919876543210?text=Hi%20Busigrow!%20I'd%20like%20to%20grow%20with%20you."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium px-3.5 py-2 rounded-xl text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800/60 hover:bg-purple-100 dark:hover:bg-purple-900/50 transition-colors"
           >
-            <span>Start Project</span>
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>WhatsApp</span>
+          </a>
+
+          <Link
+            href="/grow-with-us"
+            className="inline-flex items-center gap-1.5 text-xs font-medium px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-500 text-white transition-all shadow-sm shadow-purple-500/20"
+          >
+            <span>grow with us</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
 
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-foreground hover:bg-purple-100 dark:hover:bg-purple-900/40 border border-purple-200/50 dark:border-purple-800/50"
+            className="lg:hidden p-2 rounded-xl text-purple-800 dark:text-purple-200 hover:bg-purple-50 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800"
             aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5 text-purple-600" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
@@ -102,32 +106,44 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="md:hidden border-b border-purple-200/50 dark:border-purple-900/50 bg-background/95 backdrop-blur-2xl px-4 py-4 space-y-2 overflow-hidden"
+            transition={{ duration: 0.2 }}
+            className="lg:hidden border-b border-purple-100 dark:border-purple-900/50 bg-white/98 dark:bg-[#0c0716]/98 px-5 py-6 space-y-4"
           >
-            {NAV_LINKS.map((link) => (
+            <div className="flex flex-col space-y-1">
+              {NAV_LINKS.map((link) => {
+                const active = isActive(link.href)
+                return (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                      active
+                        ? "bg-purple-50 dark:bg-purple-900/50 text-purple-900 dark:text-white font-semibold border border-purple-200/60 dark:border-purple-800/60"
+                        : "text-zinc-600 dark:text-purple-200/80 hover:bg-purple-50/50 dark:hover:bg-purple-900/30 hover:text-purple-900 dark:hover:text-white"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              })}
+            </div>
+
+            <div className="pt-3 border-t border-purple-100 dark:border-purple-900/50 flex flex-col gap-2">
               <Link
-                key={link.label}
-                href={link.href}
+                href="/grow-with-us"
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block text-sm font-light px-4 py-2.5 rounded-lg transition-colors ${
-                  isActive(link.href)
-                    ? "bg-purple-600 text-white font-normal shadow-[0_0_15px_rgba(124,58,237,0.35)]"
-                    : "text-muted-foreground hover:text-foreground hover:bg-purple-50 dark:hover:bg-purple-950/40"
-                }`}
+                className="w-full text-center py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium shadow-sm shadow-purple-500/20"
               >
-                {link.label}
+                grow with us
               </Link>
-            ))}
-            <div className="pt-2 border-t border-purple-200/40 dark:border-purple-900/40">
-              <Link
-                href="/contact"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-between text-sm font-normal bg-gradient-to-r from-purple-600 to-violet-600 text-white px-4 py-3 rounded-lg shadow-[0_0_20px_rgba(124,58,237,0.35)]"
+              <a
+                href="tel:+919876543210"
+                className="w-full text-center py-2.5 rounded-xl border border-purple-200 dark:border-purple-800 text-purple-900 dark:text-purple-200 text-sm font-medium flex items-center justify-center gap-2"
               >
-                <span>Start Project</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </Link>
+                <Phone className="w-4 h-4 text-purple-600" />
+                <span>Call +91 98765 43210</span>
+              </a>
             </div>
           </motion.div>
         )}

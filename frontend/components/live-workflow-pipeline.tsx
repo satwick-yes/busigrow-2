@@ -8,54 +8,59 @@ import {
   FileCheck2,
   Send,
   Database,
-  CheckCircle,
+  CheckCircle2,
   Play,
   Sparkles,
   ArrowRight,
   Activity,
-  Layers
+  Check
 } from 'lucide-react'
 
 const PIPELINE_NODES = [
   {
     id: 1,
-    name: '01 // Inbound Webhook',
-    desc: 'Meta Ad Form / Google Ads Click received',
-    sub: 'Payload validated & sanitized (< 20ms)',
+    step: 'Step 1',
+    name: 'Inbound Inquiry',
+    desc: 'Customer submits form on Google, Meta Ad, or Website',
+    detail: 'Lead payload captured instantly with zero data loss',
     icon: Webhook,
-    badge: 'TRIGGER',
+    badge: 'Intake',
   },
   {
     id: 2,
-    name: '02 // AI Qualification Engine',
-    desc: 'Claude AI analyzes budget & requirements',
-    sub: 'Scored 96/100 · High-intent commercial tag',
+    step: 'Step 2',
+    name: 'AI Lead Qualification',
+    desc: 'Analyzes intent, budget, and requirements',
+    detail: 'Categorizes high-intent commercial accounts automatically',
     icon: Bot,
-    badge: 'INTELLIGENCE',
+    badge: 'AI Analysis',
   },
   {
     id: 3,
-    name: '03 // Dynamic PDF Estimator',
-    desc: 'Architectural rate-card matrix applied',
-    sub: 'Itemized branded PDF quote generated',
+    step: 'Step 3',
+    name: 'Dynamic PDF Proposal',
+    desc: 'Applies real-time factory rate-card & material specs',
+    detail: 'Generates branded, itemized PDF estimate in < 2 seconds',
     icon: FileCheck2,
-    badge: 'SYNTHESIS',
+    badge: 'Quotation',
   },
   {
     id: 4,
-    name: '04 // WhatsApp Cloud Delivery',
-    desc: 'Direct dispatch to prospect WhatsApp',
-    sub: 'Delivered in 2.8s · Read receipt tracked',
+    step: 'Step 4',
+    name: 'Instant WhatsApp Delivery',
+    desc: 'Sends quote directly to customer WhatsApp',
+    detail: 'Delivered in under 3.2s with instant download link',
     icon: Send,
-    badge: 'DISPATCH',
+    badge: 'Dispatch',
   },
   {
     id: 5,
-    name: '05 // CRM & Rep Sync',
-    desc: 'Instant deal card on HubSpot / Airtable',
-    sub: 'Senior director assigned for consultation',
+    step: 'Step 5',
+    name: 'CRM Deal Creation',
+    desc: 'Syncs lead to HubSpot, Airtable, or Zoho CRM',
+    detail: 'Assigns senior account manager for immediate follow-up',
     icon: Database,
-    badge: 'CLOSING',
+    badge: 'Closing',
   },
 ]
 
@@ -76,105 +81,94 @@ export function LiveWorkflowPipeline() {
       } else {
         setActiveStep(step)
       }
-    }, 700)
+    }, 800)
   }
 
+  const currentNode = PIPELINE_NODES.find(n => n.id === activeStep) || PIPELINE_NODES[0]
+
   return (
-    <div className="w-full rounded-3xl border border-purple-200/60 dark:border-purple-900/50 bg-card/85 backdrop-blur-2xl p-6 sm:p-10 space-y-8 shadow-[0_0_50px_rgba(139,92,246,0.12)]">
+    <div className="w-full rounded-3xl border border-purple-200/60 dark:border-purple-900/50 bg-card/90 backdrop-blur-xl p-5 sm:p-8 md:p-10 space-y-6 shadow-sm">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-purple-200/50 dark:border-purple-900/40">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-purple-200/50 dark:border-purple-900/40">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-xs font-mono text-purple-700 dark:text-purple-300 mb-2 font-light">
-            <Activity className="w-3.5 h-3.5 text-purple-600 animate-pulse" />
-            <span>DETERMINISTIC_AUTOMATION_GRAPH // REALTIME</span>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-950/60 text-xs font-medium text-purple-700 dark:text-purple-300 mb-2 border border-purple-200/60 dark:border-purple-800/40">
+            <Activity className="w-3.5 h-3.5 text-purple-600" />
+            <span>Automated Sales Pipeline</span>
           </div>
           <h3 className="text-2xl sm:text-3xl font-light tracking-tight text-foreground">
-            Sub-5-Second Lead-to-Quote Automation Pipeline
+            Sub-5-Second Lead-to-Quote Automation
           </h3>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1 font-light">
-            Visualizing our proprietary WhatsApp intake, AI budget qualification, and automated CRM deal dispatch engine.
+            How we automate your inbound leads from ad click to verified WhatsApp PDF quotation.
           </p>
         </div>
 
         <button
           onClick={runSimulation}
           disabled={isPlaying}
-          className="self-start sm:self-auto inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-mono text-xs font-normal shadow-[0_0_18px_rgba(139,92,246,0.3)] transition-all cursor-pointer disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium shadow-sm transition-all cursor-pointer disabled:opacity-50 self-start sm:self-auto"
         >
-          <Play className="w-3.5 h-3.5 fill-white" />
-          <span>{isPlaying ? 'SIMULATING EXECUTION...' : 'Simulate Event Flow'}</span>
+          <Play className="w-3.5 h-3.5 fill-current" />
+          <span>{isPlaying ? 'Running Pipeline...' : 'Test Live Flow'}</span>
         </button>
       </div>
 
-      {/* Nodes Timeline Diagram */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 relative">
+      {/* 5 Step Indicator */}
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
         {PIPELINE_NODES.map((node) => {
-          const Icon = node.icon
           const isActive = activeStep === node.id
-          const isPassed = activeStep > node.id
-
+          const isCompleted = activeStep > node.id
           return (
-            <motion.div
+            <button
               key={node.id}
               onClick={() => setActiveStep(node.id)}
-              whileHover={{ y: -3 }}
-              transition={{ duration: 0.2 }}
-              className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between relative overflow-hidden ${
+              className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
                 isActive
-                  ? 'bg-purple-50/80 dark:bg-purple-950/70 border-purple-500 shadow-[0_0_25px_rgba(139,92,246,0.25)] ring-1 ring-purple-500/30'
-                  : isPassed
-                  ? 'bg-purple-500/5 dark:bg-purple-950/30 border-purple-300/60 dark:border-purple-800/50 text-muted-foreground'
-                  : 'bg-secondary/30 border-purple-200/40 dark:border-purple-900/30 text-muted-foreground opacity-60'
+                  ? 'bg-purple-50 dark:bg-purple-950/70 border-purple-500 shadow-sm'
+                  : isCompleted
+                  ? 'bg-purple-50/40 dark:bg-purple-950/30 border-purple-300/40 dark:border-purple-800/30'
+                  : 'bg-card/40 border-purple-200/30 dark:border-purple-900/20 opacity-70 hover:opacity-100'
               }`}
             >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${
-                      isActive || isPassed
-                        ? 'bg-purple-600 text-white shadow-sm'
-                        : 'bg-secondary text-muted-foreground'
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <span
-                    className={`text-[9px] font-mono px-2 py-0.5 rounded-full font-light ${
-                      isActive
-                        ? 'bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30'
-                        : 'bg-secondary text-muted-foreground'
-                    }`}
-                  >
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[10px] font-mono text-purple-700 dark:text-purple-300 font-medium">
+                  {node.step}
+                </span>
+                {isCompleted ? (
+                  <Check className="w-3.5 h-3.5 text-emerald-500" />
+                ) : (
+                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300">
                     {node.badge}
                   </span>
-                </div>
-
-                <div className="text-xs font-normal text-foreground mb-1">{node.name}</div>
-                <p className="text-[11px] text-muted-foreground leading-snug font-light">{node.desc}</p>
+                )}
               </div>
-
-              <div className="pt-3 mt-3 border-t border-purple-200/40 dark:border-purple-900/40 text-[10px] font-mono font-light text-purple-700/90 dark:text-purple-300/90">
-                {node.sub}
-              </div>
-            </motion.div>
+              <div className="text-xs font-medium text-foreground line-clamp-1">{node.name}</div>
+            </button>
           )
         })}
       </div>
 
-      {/* Dynamic Detail Console */}
-      <div className="p-5 rounded-2xl bg-purple-950/15 dark:bg-purple-950/40 border border-purple-200/60 dark:border-purple-800/60 font-mono text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="text-foreground font-normal flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-purple-500 animate-ping" />
-            <span>ACTIVE_NODE: {PIPELINE_NODES[activeStep - 1].name}</span>
+      {/* Active Step Showcase */}
+      <div className="p-5 sm:p-7 rounded-2xl bg-purple-50/30 dark:bg-purple-950/30 border border-purple-200/50 dark:border-purple-900/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1 max-w-xl">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-purple-600" />
+            <span className="text-xs font-mono font-medium text-purple-700 dark:text-purple-300">
+              Active Stage: {currentNode.name}
+            </span>
           </div>
-          <p className="text-muted-foreground text-[11px] font-light">
-            {PIPELINE_NODES[activeStep - 1].desc} &middot; {PIPELINE_NODES[activeStep - 1].sub}
+          <h4 className="text-lg sm:text-xl font-normal text-foreground">
+            {currentNode.desc}
+          </h4>
+          <p className="text-xs text-muted-foreground font-light">
+            {currentNode.detail}
           </p>
         </div>
 
-        <div className="flex items-center gap-3 shrink-0 text-xs text-purple-700 dark:text-purple-300 font-normal">
-          <span>PIPELINE_LATENCY: 2.8s SLA</span>
+        <div className="flex items-center gap-3 self-start md:self-auto">
+          <div className="px-4 py-2 rounded-xl bg-purple-100/70 dark:bg-purple-900/40 border border-purple-200 dark:border-purple-800 text-xs font-mono text-purple-800 dark:text-purple-200">
+            Latency SLA: &lt; 3.2s
+          </div>
         </div>
       </div>
     </div>

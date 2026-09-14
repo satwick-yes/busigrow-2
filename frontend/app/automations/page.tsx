@@ -355,7 +355,7 @@ export default function AutomationsPage() {
               <div>
                 <div className="flex justify-between text-xs font-mono mb-2">
                   <span className="text-muted-foreground">Average Deal / Order Value (₹):</span>
-                  <span className="font-bold text-purple-700 dark:text-purple-300">₹{avgTicketSize.toLocaleString()}</span>
+                  <span className="font-bold text-purple-700 dark:text-purple-300">₹{avgTicketSize.toLocaleString('en-IN')}</span>
                 </div>
                 <input
                   type="range"
@@ -390,7 +390,7 @@ export default function AutomationsPage() {
                 <span className="text-xs font-mono text-muted-foreground">Monthly Recovered Pipeline</span>
                 <div>
                   <div className="text-2xl sm:text-3xl font-bold font-mono text-purple-700 dark:text-purple-300">
-                    ₹{Math.round(monthlyRevenueRecovered).toLocaleString()}
+                    ₹{Math.round(monthlyRevenueRecovered).toLocaleString('en-IN')}
                   </div>
                   <div className="text-[11px] font-mono text-muted-foreground mt-0.5">Estimated Run-Rate</div>
                 </div>
