@@ -87,12 +87,12 @@ export function LiveWorkflowPipeline() {
   const currentNode = PIPELINE_NODES.find(n => n.id === activeStep) || PIPELINE_NODES[0]
 
   return (
-    <div className="w-full rounded-3xl border border-purple-200/60 dark:border-purple-900/50 bg-card/90 backdrop-blur-xl p-5 sm:p-8 md:p-10 space-y-6 shadow-sm">
+    <div className="w-full rounded-3xl border border-purple-200/60 dark:border-border bg-card/90 backdrop-blur-xl p-5 sm:p-8 md:p-10 space-y-6 shadow-sm">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-purple-200/50 dark:border-purple-900/40">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 dark:bg-purple-950/60 text-xs font-medium text-purple-700 dark:text-purple-300 mb-2 border border-purple-200/60 dark:border-purple-800/40">
-            <Activity className="w-3.5 h-3.5 text-purple-600" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 dark:bg-secondary text-xs font-medium text-primary dark:text-muted-foreground mb-2 border border-purple-200/60 dark:border-border/40">
+            <Activity className="w-3.5 h-3.5 text-primary" />
             <span>Automated Sales Pipeline</span>
           </div>
           <h3 className="text-2xl sm:text-3xl font-light tracking-tight text-foreground">
@@ -106,7 +106,7 @@ export function LiveWorkflowPipeline() {
         <button
           onClick={runSimulation}
           disabled={isPlaying}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium shadow-sm transition-all cursor-pointer disabled:opacity-50 self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-purple-600 hover:bg-purple-700 text-foreground text-xs font-medium shadow-sm transition-all cursor-pointer disabled:opacity-50 self-start sm:self-auto"
         >
           <Play className="w-3.5 h-3.5 fill-current" />
           <span>{isPlaying ? 'Running Pipeline...' : 'Test Live Flow'}</span>
@@ -124,20 +124,20 @@ export function LiveWorkflowPipeline() {
               onClick={() => setActiveStep(node.id)}
               className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
                 isActive
-                  ? 'bg-purple-50 dark:bg-purple-950/70 border-purple-500 shadow-sm'
+                  ? 'bg-purple-50 dark:bg-secondary/70 border-purple-500 shadow-sm'
                   : isCompleted
-                  ? 'bg-purple-50/40 dark:bg-purple-950/30 border-purple-300/40 dark:border-purple-800/30'
+                  ? 'bg-purple-50/40 dark:bg-secondary/30 border-purple-300/40 dark:border-border/30'
                   : 'bg-card/40 border-purple-200/30 dark:border-purple-900/20 opacity-70 hover:opacity-100'
               }`}
             >
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[10px] font-mono text-purple-700 dark:text-purple-300 font-medium">
+                <span className="text-[10px] font-mono text-primary dark:text-muted-foreground font-medium">
                   {node.step}
                 </span>
                 {isCompleted ? (
                   <Check className="w-3.5 h-3.5 text-emerald-500" />
                 ) : (
-                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300">
+                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-900/40 text-primary dark:text-muted-foreground">
                     {node.badge}
                   </span>
                 )}
@@ -149,11 +149,11 @@ export function LiveWorkflowPipeline() {
       </div>
 
       {/* Active Step Showcase */}
-      <div className="p-5 sm:p-7 rounded-2xl bg-purple-50/30 dark:bg-purple-950/30 border border-purple-200/50 dark:border-purple-900/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-5 sm:p-7 rounded-2xl bg-purple-50/30 dark:bg-secondary/30 border border-purple-200/50 dark:border-purple-900/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1 max-w-xl">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-purple-600" />
-            <span className="text-xs font-mono font-medium text-purple-700 dark:text-purple-300">
+            <span className="text-xs font-mono font-medium text-primary dark:text-muted-foreground">
               Active Stage: {currentNode.name}
             </span>
           </div>
@@ -166,7 +166,7 @@ export function LiveWorkflowPipeline() {
         </div>
 
         <div className="flex items-center gap-3 self-start md:self-auto">
-          <div className="px-4 py-2 rounded-xl bg-purple-100/70 dark:bg-purple-900/40 border border-purple-200 dark:border-purple-800 text-xs font-mono text-purple-800 dark:text-purple-200">
+          <div className="px-4 py-2 rounded-xl bg-purple-100/70 dark:bg-purple-900/40 border border-purple-200 dark:border-border text-xs font-mono text-primary dark:text-muted-foreground">
             Latency SLA: &lt; 3.2s
           </div>
         </div>

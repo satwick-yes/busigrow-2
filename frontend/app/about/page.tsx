@@ -121,7 +121,7 @@ export default function AboutPage() {
   const [activeMachine, setActiveMachine] = useState(0)
 
   return (
-    <div className="w-full min-h-screen bg-[#070310] text-zinc-100 font-sans selection:bg-purple-600 selection:text-white">
+    <div className="w-full min-h-screen bg-background text-muted-foreground font-sans selection:bg-purple-600 selection:text-foreground">
       <Navbar />
 
       {/* =========================================================================
@@ -130,30 +130,30 @@ export default function AboutPage() {
       <section className="pt-28 sm:pt-36 pb-16 border-b border-purple-900/40 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 space-y-6">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-purple-950/80 border border-purple-800 text-purple-300">
+            <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-secondary border border-border text-muted-foreground">
               ORIGIN &middot; NOIDA SECTOR 63 &middot; GURUGRAM
             </span>
-            <span className="text-[11px] font-mono text-purple-400 flex items-center gap-1.5">
+            <span className="text-[11px] font-mono text-primary flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               PLANT TELEMETRY: 24/7 PRODUCTION ACTIVE
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-7xl lg:text-8xl font-black uppercase tracking-[-0.04em] text-white leading-[0.92]">
+          <h1 className="text-4xl sm:text-7xl lg:text-8xl font-black uppercase tracking-[-0.04em] text-foreground leading-[0.92]">
             The Plant &amp; <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-violet-300">
               The Code.
             </span>
           </h1>
 
-          <p className="text-sm sm:text-base md:text-lg text-purple-200/70 max-w-2xl font-light leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl font-light leading-relaxed">
             Busigrow was founded in Delhi NCR to solve a fundamental fracture in modern commerce: digital agencies don&apos;t know how to fabricate in the physical world, and traditional sign contractors have zero design taste or code capability.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-4">
             <Link
               href="/grow-with-us"
-              className="inline-flex items-center gap-2 px-7 py-4 bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs uppercase tracking-wider transition-colors shadow-lg shadow-purple-900/40"
+              className="inline-flex items-center gap-2 px-7 py-4 bg-purple-600 hover:bg-purple-500 text-foreground font-medium text-xs uppercase tracking-wider transition-colors shadow-lg shadow-purple-900/40"
             >
               <span>Schedule Plant Inspection</span>
               <ArrowRight className="w-4 h-4" />
@@ -161,30 +161,30 @@ export default function AboutPage() {
 
             <Link
               href="/offline"
-              className="inline-flex items-center gap-2 px-6 py-4 bg-purple-950/40 hover:bg-purple-900/40 text-purple-300 border border-purple-800 font-medium text-xs uppercase tracking-wider transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-4 bg-secondary/40 hover:bg-secondary/80/40 text-muted-foreground border border-border font-medium text-xs uppercase tracking-wider transition-colors"
             >
               <span>Explore Substrates</span>
-              <ArrowUpRight className="w-4 h-4 text-purple-400" />
+              <ArrowUpRight className="w-4 h-4 text-primary" />
             </Link>
           </div>
 
           {/* Plant Metric Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 border-t border-purple-900/40 font-mono">
-            <div className="p-4 bg-purple-950/20 border border-purple-900/40">
-              <div className="text-3xl sm:text-4xl font-bold text-white tracking-tight">30,000</div>
-              <div className="text-[10px] text-purple-400 uppercase tracking-wider mt-1">SQ.FT NOIDA PLANT</div>
+            <div className="p-4 bg-secondary/20 border border-purple-900/40">
+              <div className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight">30,000</div>
+              <div className="text-[10px] text-primary uppercase tracking-wider mt-1">SQ.FT NOIDA PLANT</div>
             </div>
-            <div className="p-4 bg-purple-950/20 border border-purple-900/40">
-              <div className="text-3xl sm:text-4xl font-bold text-purple-300 tracking-tight">24-48H</div>
-              <div className="text-[10px] text-purple-400 uppercase tracking-wider mt-1">DELHI NCR TURNAROUND</div>
+            <div className="p-4 bg-secondary/20 border border-purple-900/40">
+              <div className="text-3xl sm:text-4xl font-bold text-muted-foreground tracking-tight">24-48H</div>
+              <div className="text-[10px] text-primary uppercase tracking-wider mt-1">DELHI NCR TURNAROUND</div>
             </div>
-            <div className="p-4 bg-purple-950/20 border border-purple-900/40">
+            <div className="p-4 bg-secondary/20 border border-purple-900/40">
               <div className="text-3xl sm:text-4xl font-bold text-emerald-400 tracking-tight">400+</div>
-              <div className="text-[10px] text-purple-400 uppercase tracking-wider mt-1">STOREFRONTS FABRICATED</div>
+              <div className="text-[10px] text-primary uppercase tracking-wider mt-1">STOREFRONTS FABRICATED</div>
             </div>
-            <div className="p-4 bg-purple-950/20 border border-purple-900/40">
-              <div className="text-3xl sm:text-4xl font-bold text-white tracking-tight">35+</div>
-              <div className="text-[10px] text-purple-400 uppercase tracking-wider mt-1">AGENCY WHITE-LABEL HUBS</div>
+            <div className="p-4 bg-secondary/20 border border-purple-900/40">
+              <div className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight">35+</div>
+              <div className="text-[10px] text-primary uppercase tracking-wider mt-1">AGENCY WHITE-LABEL HUBS</div>
             </div>
           </div>
         </div>
@@ -197,14 +197,14 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div className="space-y-1">
-              <span className="text-[11px] font-mono text-purple-400 uppercase tracking-widest">
+              <span className="text-[11px] font-mono text-primary uppercase tracking-widest">
                 // FACTORY FLOOR CAPABILITIES
               </span>
-              <h2 className="text-3xl sm:text-5xl font-light uppercase tracking-tight text-white">
+              <h2 className="text-3xl sm:text-5xl font-light uppercase tracking-tight text-foreground">
                 Machinery &amp; Equipment Ledger
               </h2>
             </div>
-            <p className="text-xs font-mono text-purple-300/80 max-w-sm">
+            <p className="text-xs font-mono text-muted-foreground/80 max-w-sm">
               In-house industrial precision hardware running 24-hour shifts in Noida Sector 63.
             </p>
           </div>
@@ -220,28 +220,28 @@ export default function AboutPage() {
                     onClick={() => setActiveMachine(idx)}
                     className={`p-6 border transition-all cursor-pointer ${
                       active
-                        ? 'border-purple-400 bg-[#120726] shadow-xl'
-                        : 'border-purple-900/50 bg-[#090312] hover:border-purple-700'
+                        ? 'border-purple-400 bg-background shadow-xl'
+                        : 'border-border bg-background hover:border-border'
                     }`}
                   >
                     <div className="flex items-center justify-between font-mono text-[10px] mb-2">
-                      <span className="text-purple-400 font-semibold">{mach.tag}</span>
-                      <span className="px-2 py-0.5 bg-purple-950 border border-purple-800 text-purple-300">
+                      <span className="text-primary font-semibold">{mach.tag}</span>
+                      <span className="px-2 py-0.5 bg-secondary border border-border text-muted-foreground">
                         {mach.throughput}
                       </span>
                     </div>
 
-                    <h3 className="text-xl font-bold uppercase text-white font-sans">
+                    <h3 className="text-xl font-bold uppercase text-foreground font-sans">
                       {mach.name}
                     </h3>
 
-                    <p className="text-xs text-purple-200/70 mt-2 font-light leading-relaxed font-sans">
+                    <p className="text-xs text-muted-foreground mt-2 font-light leading-relaxed font-sans">
                       {mach.desc}
                     </p>
 
-                    <div className="mt-4 pt-3 border-t border-purple-900/40 flex items-center justify-between text-[11px] font-mono text-purple-400">
+                    <div className="mt-4 pt-3 border-t border-purple-900/40 flex items-center justify-between text-[11px] font-mono text-primary">
                       <span>Specs: {mach.specs.split('·')[0]}</span>
-                      <span className="text-white">&rarr; Inspect Specs</span>
+                      <span className="text-foreground">&rarr; Inspect Specs</span>
                     </div>
                   </div>
                 )
@@ -249,11 +249,11 @@ export default function AboutPage() {
             </div>
 
             {/* Right Telemetry Spec Inspector */}
-            <div className="lg:col-span-6 sticky top-28 border border-purple-800/80 bg-[#090314] font-mono text-xs overflow-hidden shadow-2xl">
-              <div className="flex items-center justify-between px-4 py-3 bg-[#130728] border-b border-purple-900/60">
+            <div className="lg:col-span-6 sticky top-28 border border-border/80 bg-background font-mono text-xs overflow-hidden shadow-2xl">
+              <div className="flex items-center justify-between px-4 py-3 bg-background border-b border-border">
                 <div className="flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-purple-400" />
-                  <span className="text-purple-300 font-semibold uppercase text-[11px]">
+                  <Activity className="w-4 h-4 text-primary" />
+                  <span className="text-muted-foreground font-semibold uppercase text-[11px]">
                     UNIT SPECIFICATION // {MACHINERY_LEDGER[activeMachine].id}
                   </span>
                 </div>
@@ -265,37 +265,37 @@ export default function AboutPage() {
 
               <div className="p-6 sm:p-8 space-y-6">
                 <div>
-                  <span className="text-[10px] text-purple-400 uppercase tracking-widest block mb-1">
+                  <span className="text-[10px] text-primary uppercase tracking-widest block mb-1">
                     HARDWARE DESIGNATION
                   </span>
-                  <h4 className="text-2xl font-bold uppercase text-white font-sans">
+                  <h4 className="text-2xl font-bold uppercase text-foreground font-sans">
                     {MACHINERY_LEDGER[activeMachine].name}
                   </h4>
                 </div>
 
-                <div className="space-y-3 p-4 bg-[#05020c] border border-purple-900/60 text-purple-200 text-xs">
+                <div className="space-y-3 p-4 bg-background border border-border text-muted-foreground text-xs">
                   <div className="flex justify-between border-b border-purple-900/40 pb-2">
-                    <span className="text-zinc-400">Technical Specs:</span>
-                    <span className="text-white font-semibold text-right max-w-[280px]">{MACHINERY_LEDGER[activeMachine].specs}</span>
+                    <span className="text-muted-foreground">Technical Specs:</span>
+                    <span className="text-foreground font-semibold text-right max-w-[280px]">{MACHINERY_LEDGER[activeMachine].specs}</span>
                   </div>
                   <div className="flex justify-between border-b border-purple-900/40 pb-2">
-                    <span className="text-zinc-400">Output Velocity:</span>
+                    <span className="text-muted-foreground">Output Velocity:</span>
                     <span className="text-emerald-400 font-semibold">{MACHINERY_LEDGER[activeMachine].throughput}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-400">Cooling &amp; Shielding:</span>
-                    <span className="text-purple-300 font-semibold">{MACHINERY_LEDGER[activeMachine].cooling}</span>
+                    <span className="text-muted-foreground">Cooling &amp; Shielding:</span>
+                    <span className="text-muted-foreground font-semibold">{MACHINERY_LEDGER[activeMachine].cooling}</span>
                   </div>
                 </div>
 
-                <p className="text-xs text-purple-200/80 font-light leading-relaxed font-sans">
+                <p className="text-xs text-muted-foreground font-light leading-relaxed font-sans">
                   {MACHINERY_LEDGER[activeMachine].desc}
                 </p>
 
                 <div className="pt-2">
                   <Link
                     href="/grow-with-us"
-                    className="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs uppercase tracking-wider text-center block transition-colors"
+                    className="w-full py-3 bg-purple-600 hover:bg-purple-500 text-foreground font-medium text-xs uppercase tracking-wider text-center block transition-colors"
                   >
                     Request Custom Fabrication Run &rarr;
                   </Link>
@@ -312,10 +312,10 @@ export default function AboutPage() {
       <section className="py-16 sm:py-24 border-b border-purple-900/40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
           <div className="space-y-1">
-            <span className="text-[11px] font-mono text-purple-400 uppercase tracking-widest">
+            <span className="text-[11px] font-mono text-primary uppercase tracking-widest">
               // OPERATING MANIFESTO
             </span>
-            <h2 className="text-3xl sm:text-5xl font-light uppercase tracking-tight text-white">
+            <h2 className="text-3xl sm:text-5xl font-light uppercase tracking-tight text-foreground">
               Four Invariant Principles
             </h2>
           </div>
@@ -324,28 +324,28 @@ export default function AboutPage() {
             {OPERATING_PRINCIPLES.map((p) => (
               <div
                 key={p.roman}
-                className="p-8 border border-purple-900/50 bg-[#090314] space-y-6 hover:border-purple-500 transition-colors flex flex-col justify-between"
+                className="p-8 border border-border bg-background space-y-6 hover:border-primary transition-colors flex flex-col justify-between"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between font-mono text-xs border-b border-purple-900/40 pb-4">
-                    <span className="text-3xl font-black font-mono text-purple-400">
+                    <span className="text-3xl font-black font-mono text-primary">
                       {p.roman}
                     </span>
-                    <span className="px-2.5 py-1 bg-purple-950 border border-purple-800 text-purple-300 text-[10px] uppercase">
+                    <span className="px-2.5 py-1 bg-secondary border border-border text-muted-foreground text-[10px] uppercase">
                       {p.badge}
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-bold uppercase text-white font-sans">
+                  <h3 className="text-2xl font-bold uppercase text-foreground font-sans">
                     {p.title}
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-purple-200/70 font-light leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
                     {p.desc}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-purple-900/30 text-[10px] font-mono text-zinc-500">
+                <div className="pt-4 border-t border-purple-900/30 text-[10px] font-mono text-muted-foreground">
                   STANDARD OPERATING DIRECTIVE // BUSIGROW 2026
                 </div>
               </div>
@@ -361,14 +361,14 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div className="space-y-1">
-              <span className="text-[11px] font-mono text-purple-400 uppercase tracking-widest">
+              <span className="text-[11px] font-mono text-primary uppercase tracking-widest">
                 // REGIONAL FOOTPRINT
               </span>
-              <h2 className="text-3xl sm:text-5xl font-light uppercase tracking-tight text-white">
+              <h2 className="text-3xl sm:text-5xl font-light uppercase tracking-tight text-foreground">
                 Delhi NCR Hubs &middot; Pan-India Dispatch
               </h2>
             </div>
-            <p className="text-xs font-mono text-purple-300/80 max-w-sm">
+            <p className="text-xs font-mono text-muted-foreground/80 max-w-sm">
               Strategic ground installations and software sprint rooms across the national capital region.
             </p>
           </div>
@@ -377,29 +377,29 @@ export default function AboutPage() {
             {NCR_HUBS.map((hub) => (
               <div
                 key={hub.name}
-                className="p-8 border border-purple-900/50 bg-[#0a0414] space-y-6 hover:border-purple-500 transition-colors flex flex-col justify-between"
+                className="p-8 border border-border bg-background space-y-6 hover:border-primary transition-colors flex flex-col justify-between"
               >
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-purple-400 font-mono text-xs">
+                  <div className="flex items-center gap-2 text-primary font-mono text-xs">
                     <MapPin className="w-4 h-4 shrink-0" />
                     <span>{hub.coordinates}</span>
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-bold uppercase text-white font-sans">
+                    <h3 className="text-xl font-bold uppercase text-foreground font-sans">
                       {hub.name}
                     </h3>
-                    <p className="text-[10px] font-mono text-purple-300 mt-1 uppercase">
+                    <p className="text-[10px] font-mono text-muted-foreground mt-1 uppercase">
                       {hub.role}
                     </p>
                   </div>
 
-                  <p className="text-xs text-purple-200/70 font-light leading-relaxed">
+                  <p className="text-xs text-muted-foreground font-light leading-relaxed">
                     {hub.desc}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-purple-900/40 font-mono text-[10px] text-purple-400">
+                <div className="pt-4 border-t border-purple-900/40 font-mono text-[10px] text-primary">
                   {hub.badge}
                 </div>
               </div>
@@ -413,15 +413,15 @@ export default function AboutPage() {
          ========================================================================= */}
       <section className="py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="p-10 sm:p-16 border border-purple-800 bg-[#120726] text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          <div className="p-10 sm:p-16 border border-border bg-background text-foreground flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
             <div className="space-y-3 max-w-xl">
-              <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-purple-900/50 border border-purple-700 text-purple-300">
+              <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-purple-900/50 border border-border text-muted-foreground">
                 DIRECT ACCESS
               </span>
               <h3 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight">
                 Inspect the plant or review our software sprint line.
               </h3>
-              <p className="text-xs sm:text-sm text-purple-200/80 font-light leading-relaxed">
+              <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
                 Connect directly with our engineering directors in Noida Sector 63 or Gurugram Cyber City.
               </p>
             </div>

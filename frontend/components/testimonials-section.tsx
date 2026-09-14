@@ -104,7 +104,7 @@ export default function TestimonialsSection() {
                 <div className="self-stretch text-foreground text-base font-light leading-6">
                   {testimonials[activeTestimonial].name}
                 </div>
-                <div className="self-stretch text-slate-600 text-base font-light leading-6">
+                <div className="self-stretch text-muted-foreground text-base font-light leading-6">
                   {testimonials[activeTestimonial].company}
                 </div>
               </div>
@@ -125,7 +125,7 @@ export default function TestimonialsSection() {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="text-slate-700"
+                    className="text-foreground"
                   />
                 </svg>
               </div>
@@ -142,7 +142,7 @@ export default function TestimonialsSection() {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="text-slate-700"
+                    className="text-foreground"
                   />
                 </svg>
               </div>

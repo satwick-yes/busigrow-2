@@ -70,7 +70,7 @@ export default function FAQSection() {
           <div className="w-full flex flex-col justify-center text-foreground font-light leading-tight md:leading-[44px] text-4xl tracking-tight">
             Frequently Asked Questions
           </div>
-          <div className="w-full text-slate-600 text-base font-light leading-7">
+          <div className="w-full text-muted-foreground text-base font-light leading-7">
             Explore your data, build your dashboard,
             <br className="hidden md:block" />
             bring your team together.
@@ -108,7 +108,7 @@ export default function FAQSection() {
                       isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
                     }`}
                   >
-                    <div className="px-6 pb-[18px] text-slate-600 text-sm font-light leading-6">
+                    <div className="px-6 pb-[18px] text-muted-foreground text-sm font-light leading-6">
                       {item.answer}
                     </div>
                   </div>

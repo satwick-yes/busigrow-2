@@ -26,15 +26,24 @@ export const metadata: Metadata = {
   },
 }
 
+import { ThemeProvider } from "@/components/theme-provider"
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${fontSans.variable} ${fontMono.variable} antialiased`}>
-      <body className="bg-background text-foreground min-h-screen font-sans font-light antialiased selection:bg-purple-600 selection:text-white">
-        {children}
+    <html lang="en" className={`${fontSans.variable} ${fontMono.variable} antialiased`} suppressHydrationWarning>
+      <body className="bg-background text-foreground min-h-screen font-sans font-light antialiased selection:bg-purple-600 selection:text-foreground">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )

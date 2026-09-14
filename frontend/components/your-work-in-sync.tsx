@@ -23,8 +23,8 @@ const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
 }) => {
   const isLight = theme === "light"
   const bg = isLight ? "bg-white/20" : "bg-white/10"
-  const textPrimary = isLight ? "text-foreground" : "text-slate-100"
-  const textSecondary = isLight ? "text-slate-600" : "text-muted-foreground"
+  const textPrimary = isLight ? "text-foreground" : "text-muted-foreground"
+  const textSecondary = isLight ? "text-muted-foreground" : "text-muted-foreground"
   const bubbleLight = isLight ? "bg-slate-100/60" : "bg-primary/80"
   const bubbleDark = isLight ? "bg-primary/80" : "bg-slate-700/90"
 
@@ -64,7 +64,7 @@ const YourWorkInSync: React.FC<YourWorkInSyncProps> = ({
           {/* Message 2 – right */}
           <div className="flex items-start gap-2 absolute right-0 top-14 w-full max-w-[300px] justify-end">
             <div
-              className={`px-4 py-2 rounded-full ${bubbleDark} text-white font-light text-sm`}
+              className={`px-4 py-2 rounded-full ${bubbleDark} text-foreground font-light text-sm`}
             >
               Hi everyone
             </div>

@@ -24,7 +24,7 @@ export function DashboardPreview() {
               <nav className="space-y-2">
                 <div className="text-xs font-light text-muted-foreground uppercase tracking-wide mb-3">Navigation</div>
                 {["Home", "Customers", "Billing", "Schedules", "Invoices", "Products"].map((item) => (
-                  <div key={item} className="text-sm font-light text-slate-700 py-1 hover:text-foreground cursor-pointer transition-colors">
+                  <div key={item} className="text-sm font-light text-foreground py-1 hover:text-foreground cursor-pointer transition-colors">
                     {item}
                   </div>
                 ))}
@@ -35,12 +35,12 @@ export function DashboardPreview() {
             <div className="flex-1 p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-light text-foreground">Schedules</h2>
-                <Button className="bg-primary hover:bg-primary text-white font-light text-sm shadow-md rounded-full px-6">Create schedule</Button>
+                <Button className="bg-primary hover:bg-primary text-foreground font-light text-sm shadow-md rounded-full px-6">Create schedule</Button>
               </div>
 
               {/* Table Mockup */}
               <div className="glass-card rounded-lg overflow-hidden">
-                <div className="grid grid-cols-6 gap-4 p-4 bg-white/40 border-b border-white/20 text-sm font-light text-slate-600">
+                <div className="grid grid-cols-6 gap-4 p-4 bg-white/40 border-b border-white/20 text-sm font-light text-muted-foreground">
                   <div>Customer</div>
                   <div>Status</div>
                   <div>Products</div>
@@ -51,7 +51,7 @@ export function DashboardPreview() {
 
                 {/* Table Rows */}
                 {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="grid grid-cols-6 gap-4 p-4 border-b border-white/10 text-sm font-light text-slate-700 last:border-b-0 transition-colors hover:bg-white/20 cursor-default">
+                  <div key={i} className="grid grid-cols-6 gap-4 p-4 border-b border-white/10 text-sm font-light text-foreground last:border-b-0 transition-colors hover:bg-white/20 cursor-default">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 bg-slate-200 rounded-full border border-white/40"></div>
                       <span>Hypernise</span>
@@ -63,7 +63,7 @@ export function DashboardPreview() {
                             ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
                             : i % 3 === 1
                               ? "bg-primary/10 text-blue-700 border-blue-500/20"
-                              : "bg-slate-500/10 text-slate-700 border-slate-500/20"
+                              : "bg-slate-500/10 text-foreground border-slate-500/20"
                         }`}
                       >
                         {i % 3 === 0 ? "Complete" : i % 3 === 1 ? "Active" : "Draft"}

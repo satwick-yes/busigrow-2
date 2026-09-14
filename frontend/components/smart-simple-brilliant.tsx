@@ -112,10 +112,10 @@ const SmartSimpleBrilliant: React.FC<SmartSimpleBrilliantProps> = ({
               {/* Violet tall event */}
               <div className="w-full rounded-lg overflow-hidden bg-purple-500/10 border border-purple-500/20 p-2 flex flex-col gap-0.5">
                 <div className="flex items-center gap-1">
-                  <span className="font-light text-[10px] text-purple-700">11:00 AM</span>
+                  <span className="font-light text-[10px] text-primary">11:00 AM</span>
                   <div className="w-1.5 h-1.5 rounded-full bg-purple-500 ml-auto" />
                 </div>
-                <div className="font-light text-[11px] text-purple-900 truncate">
+                <div className="font-light text-[11px] text-primary truncate">
                   🍔 New Employee Welcome Lunch!
                 </div>
               </div>

@@ -7,12 +7,12 @@ export default function CTASection() {
         <h2 className="text-4xl md:text-5xl font-light tracking-tight leading-tight">
           Ready to transform your business?
         </h2>
-        <p className="text-slate-600 text-base leading-7 font-light">
+        <p className="text-muted-foreground text-base leading-7 font-light">
           Join thousands of businesses streamlining their operations,
           <br />
           managing schedules, and growing with data-driven insights.
         </p>
-        <button className="h-11 px-8 bg-primary hover:bg-primary text-white rounded-full font-light text-sm transition-all shadow-lg hover:shadow-xl">
+        <button className="h-11 px-8 bg-primary hover:bg-primary text-foreground rounded-full font-light text-sm transition-all shadow-lg hover:shadow-xl">
           Start for free
         </button>
       </div>

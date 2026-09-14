@@ -200,7 +200,7 @@ export default function PricingSection() {
 
             {/* Professional Plan (Featured) */}
             <motion.div variants={item} className="flex-1 px-8 py-10 glass-card bg-white/40 border-accent/30 rounded-3xl flex flex-col justify-start items-start gap-10 shadow-[0_8px_32px_rgba(234,88,12,0.1)] relative transform md:-translate-y-4">
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-accent text-white text-xs font-sans font-bold rounded-full uppercase tracking-wider shadow-sm">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-accent text-foreground text-xs font-sans font-bold rounded-full uppercase tracking-wider shadow-sm">
                 Most Popular
               </div>
               <div className="self-stretch flex flex-col justify-start items-start gap-8">
@@ -234,7 +234,7 @@ export default function PricingSection() {
                   </div>
                 </div>
 
-                <div className="self-stretch px-6 py-3 bg-accent text-white rounded-full flex justify-center items-center transition-all hover:bg-accent/90 cursor-pointer shadow-[0_0_15px_rgba(234,88,12,0.3)]">
+                <div className="self-stretch px-6 py-3 bg-accent text-foreground rounded-full flex justify-center items-center transition-all hover:bg-accent/90 cursor-pointer shadow-[0_0_15px_rgba(234,88,12,0.3)]">
                   <div className="text-sm font-sans font-medium">Get started</div>
                 </div>
               </div>

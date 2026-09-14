@@ -63,7 +63,7 @@ export default function DocumentationSection() {
           <div className="self-stretch text-center flex justify-center flex-col text-foreground text-3xl md:text-5xl font-light leading-tight md:leading-[60px] tracking-tight">
             Streamline your business operations
           </div>
-          <div className="self-stretch text-center text-slate-600 text-base font-light leading-7">
+          <div className="self-stretch text-center text-muted-foreground text-base font-light leading-7">
             Manage schedules, analyze data, and collaborate with your team
             <br />
             all in one powerful platform.
@@ -101,7 +101,7 @@ export default function DocumentationSection() {
                     <div className="self-stretch flex justify-center flex-col text-foreground text-sm font-light leading-6">
                       {card.title}
                     </div>
-                    <div className="self-stretch text-slate-600 text-[13px] font-light leading-[22px] whitespace-pre-line">
+                    <div className="self-stretch text-muted-foreground text-[13px] font-light leading-[22px] whitespace-pre-line">
                       {card.description}
                     </div>
                   </div>

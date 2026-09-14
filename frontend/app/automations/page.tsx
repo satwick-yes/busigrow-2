@@ -2,332 +2,368 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Navbar } from '@/components/navbar'
 import FooterSection from '@/components/footer-section'
 import {
-  Zap,
-  ArrowRight,
-  MessageSquare,
+  Bot,
   Cpu,
-  Database,
+  Workflow,
+  BarChart3,
+  Package,
+  ArrowRight,
+  ArrowUpRight,
   CheckCircle2,
   Sliders,
   Sparkles,
-  GitBranch,
-  Radio,
-  Check,
-  Play
+  Layers,
+  Terminal,
+  Zap,
+  Boxes
 } from 'lucide-react'
 
-const PIPELINE_NODES = [
+const FADE_UP = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
+}
+
+const FEATURES = [
   {
-    id: 'trigger-ingest',
-    stage: 'STAGE 01 // INGESTION',
-    title: 'Omnichannel Webhook Listener',
-    badge: '18ms Edge Ingestion',
-    tech: 'Cloudflare Workers & Vercel Edge',
-    desc: 'Listens to inbound webhooks from Meta Ads, Google Ads, website RFPs, and IVR telephony systems with cryptographic signature verification.',
-    payload: `{
-  "event": "inquiry.created",
-  "source": "meta_click_to_whatsapp",
-  "phone": "+919876543210",
-  "intent": "signage_3d_acrylic",
-  "budget": "₹1,50,000",
-  "lat_long": "28.6139, 77.2090"
-}`
+    id: 'ai-agent',
+    title: 'AI Agent builder',
+    desc: 'Deploy custom intelligent agents that handle lead qualification, customer inquiries, appointment booking, and automated CRM updates.',
+    icon: Bot,
+    category: 'Autonomous Agents',
+    capabilities: [
+      'Multi-channel WhatsApp, Web, and SMS chat routing',
+      'Context-aware knowledge base parsing',
+      'Zero-latency lead qualification and data extraction'
+    ]
   },
   {
-    id: 'ai-classifier',
-    stage: 'STAGE 02 // EVALUATION',
-    title: 'Sub-Second LLM Qualification Engine',
-    badge: '280ms Inference',
-    tech: 'Claude 3.5 Sonnet & OpenAI Function Calling',
-    desc: 'Evaluates buyer intent, parses square-footage and substrate specifications, assigns lead temperature score, and extracts structured quote variables.',
-    payload: `{
-  "lead_score": 96,
-  "status": "HIGH_INTENT",
-  "classified_substrate": "3D_CAST_ACRYLIC",
-  "sqft_estimate": 150,
-  "assigned_rep": "architect.delhi@busigrow.com",
-  "priority": "P0_IMMEDIATE_DISPATCH"
-}`
+    id: 'workflow-engine',
+    title: 'Workflow Automation Engine',
+    desc: 'Connect disparate apps, webhooks, CRMs, ERPs, and databases into cohesive, deterministic, failure-tolerant pipelines.',
+    icon: Workflow,
+    category: 'Process Orchestration',
+    capabilities: [
+      'Webhook listener with cryptographic verification',
+      'Conditional branching and automatic error retries',
+      'Real-time Slack, Email, and WhatsApp alerts'
+    ]
   },
   {
-    id: 'whatsapp-dispatch',
-    stage: 'STAGE 03 // DISPATCH',
-    title: 'Meta Cloud WhatsApp CRM Dispatcher',
-    badge: '< 1.2s Delivery SLA',
-    tech: 'Meta Graph API v20.0 + Razorpay Gateway',
-    desc: 'Dispatches personalized interactive WhatsApp blueprint messages with dynamic PDF quotes, site inspection booking buttons, and automated calendar links.',
-    payload: `{
-  "dispatch_channel": "WHATSAPP_BUSINESS_API",
-  "template": "busigrow_blueprint_estimate_v3",
-  "pdf_url": "https://cdn.busigrow.com/quotes/Q-9482.pdf",
-  "quick_replies": ["Confirm Site Inspection", "Talk to Architect"]
-}`
+    id: 'bi-dashboard',
+    title: 'Business Intelligence Dashboard',
+    desc: 'Consolidate operational telemetry, sales conversion velocity, campaign ROI, and inventory metrics into unified live dashboards.',
+    icon: BarChart3,
+    category: 'Analytics & Reporting',
+    capabilities: [
+      'Real-time KPI telemetry and revenue attribution',
+      'Automated scheduled executive report summaries',
+      'Custom metric alerts and anomaly detection'
+    ]
   },
   {
-    id: 'crm-sync',
-    stage: 'STAGE 04 // LEDGER',
-    title: 'Enterprise CRM & Factory ERP Mesh',
-    badge: 'Zero Data Loss',
-    tech: 'PostgreSQL, Supabase & Webhook Fanout',
-    desc: 'Pushes qualified opportunities into HubSpot/Zoho CRM, alerts the plant floor manager in Noida Sector 63 via Slack, and creates an audit log.',
-    payload: `{
-  "crm_record_id": "rec_948201",
-  "plant_job_ticket": "NOIDA-SEC63-JOB-2026",
-  "slack_notification_sent": true,
-  "telemetry_sync": "SUCCESS_ACK_200"
-}`
+    id: 'industry-packs',
+    title: 'Industry Packs',
+    desc: 'Pre-configured, battle-tested automation packs designed specifically for retail, real estate, logistics, healthcare, and agencies.',
+    icon: Package,
+    category: 'Turnkey Templates',
+    capabilities: [
+      'Pre-built CRM schemas and webhook endpoints',
+      'Industry-tailored AI agent prompt libraries',
+      'Rapid plug-and-play 24-hour deployment'
+    ]
+  }
+]
+
+const INDUSTRY_PACKS_LIST = [
+  {
+    name: 'Retail & Multi-Store',
+    features: ['Store inventory sync', 'Storefront signage job ticketing', 'Automated POS sales aggregation']
+  },
+  {
+    name: 'Real Estate & Property',
+    features: ['Lead capture to WhatsApp CRM', 'Automated site visit scheduling', 'Dynamic brochure dispatch']
+  },
+  {
+    name: 'Creative Agencies',
+    features: ['Client project brief ingestion', 'White-label proofing notifications', 'Automated invoicing & milestones']
+  },
+  {
+    name: 'E-commerce & Brands',
+    features: ['Abandoned cart WhatsApp recovery', 'Return & exchange ticket bot', 'Dynamic ROAS reporting']
   }
 ]
 
 export default function AutomationsPage() {
-  const [activeNode, setActiveNode] = useState(0)
-  const [inquiries, setInquiries] = useState(350)
-  const [dealValue, setDealValue] = useState(25000)
+  const [expandedFeature, setExpandedFeature] = useState<string | null>(null)
+  const [selectedPack, setSelectedPack] = useState(0)
+  const [selectedModules, setSelectedModules] = useState<string[]>([
+    'AI Agent builder',
+    'Workflow Automation Engine'
+  ])
 
-  // Financial ROI Engine
-  const recoveredInquiries = Math.round(inquiries * 0.38)
-  const recoveredRevenue = Math.round(recoveredInquiries * dealValue * 0.22)
-  const savedHours = Math.round(inquiries * 0.4)
+  const toggleModule = (name: string) => {
+    if (selectedModules.includes(name)) {
+      if (selectedModules.length > 1) {
+        setSelectedModules(selectedModules.filter((m) => m !== name))
+      }
+    } else {
+      setSelectedModules([...selectedModules, name])
+    }
+  }
 
   return (
-    <div className="w-full min-h-screen bg-[#070310] text-zinc-100 font-sans selection:bg-purple-600 selection:text-white">
+    <div className="relative w-full min-h-screen bg-background text-foreground font-sans selection:bg-purple-600 selection:text-foreground overflow-x-hidden">
       <Navbar />
 
       {/* =========================================================================
-          1. HERO SECTION: FLOWING PIPELINE OVERVIEW
+          1. HERO SECTION
          ========================================================================= */}
-      <section className="pt-28 sm:pt-36 pb-16 border-b border-purple-900/40 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 space-y-6">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-purple-950/80 border border-purple-800 text-purple-300">
-              PILLAR 03 // DATA PIPELINES &amp; CRM AUTOMATIONS
-            </span>
-            <span className="text-[11px] font-mono text-purple-400 flex items-center gap-1.5">
-              <Radio className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-              THROUGHPUT: 2.4M DISPATCHES / MO
-            </span>
-          </div>
-
-          <h1 className="text-4xl sm:text-7xl lg:text-8xl font-black uppercase tracking-[-0.04em] text-white leading-[0.92]">
-            Deterministic <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-violet-300">
-              Automated
-            </span>{' '}
-            Pipelines.
-          </h1>
-
-          <p className="text-sm sm:text-base md:text-lg text-purple-200/70 max-w-2xl font-light leading-relaxed">
-            Eliminate lead leakage with sub-5-second conversational qualification, automated WhatsApp quotes, and instant ERP job ticket dispatching. Zero human latency.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-4 pt-4">
-            <Link
-              href="/grow-with-us"
-              className="inline-flex items-center gap-2 px-7 py-4 bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs uppercase tracking-wider transition-colors shadow-lg shadow-purple-900/40"
-            >
-              <span>Build My Automation Pipeline</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-
-            <a
-              href="https://wa.me/919876543210?text=Hi%20Busigrow!%20Show%20me%20a%20live%20WhatsApp%20automation%20test."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-4 bg-purple-950/40 hover:bg-purple-900/40 text-purple-300 border border-purple-800 font-medium text-xs uppercase tracking-wider transition-colors"
-            >
-              <MessageSquare className="w-4 h-4 text-purple-400" />
-              <span>Simulate Live WhatsApp Trigger</span>
-            </a>
-          </div>
-
-          {/* Industrial Metric Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 border-t border-purple-900/40 font-mono">
-            <div className="p-4 bg-purple-950/20 border border-purple-900/40">
-              <div className="text-3xl sm:text-4xl font-bold text-white tracking-tight">&lt; 3.8s</div>
-              <div className="text-[10px] text-purple-400 uppercase tracking-wider mt-1">LEAD QUALIFICATION SLA</div>
+      <section className="relative pt-28 sm:pt-36 pb-20 sm:pb-28 border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="space-y-8 max-w-4xl">
+            <div className="inline-flex items-center gap-2">
+              <span className="text-[11px] font-mono tracking-widest uppercase px-3 py-1 bg-secondary border border-border text-muted-foreground">
+                INTELLIGENT BUSINESS SYSTEMS
+              </span>
             </div>
-            <div className="p-4 bg-purple-950/20 border border-purple-900/40">
-              <div className="text-3xl sm:text-4xl font-bold text-purple-300 tracking-tight">0.00%</div>
-              <div className="text-[10px] text-purple-400 uppercase tracking-wider mt-1">DROPPED WEBHOOKS</div>
-            </div>
-            <div className="p-4 bg-purple-950/20 border border-purple-900/40">
-              <div className="text-3xl sm:text-4xl font-bold text-emerald-400 tracking-tight">38.4%</div>
-              <div className="text-[10px] text-purple-400 uppercase tracking-wider mt-1">LEAD RECOVERY RATE</div>
-            </div>
-            <div className="p-4 bg-purple-950/20 border border-purple-900/40">
-              <div className="text-3xl sm:text-4xl font-bold text-white tracking-tight">140h+</div>
-              <div className="text-[10px] text-purple-400 uppercase tracking-wider mt-1">HOURS SAVED / MO</div>
+
+            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-[-0.04em] text-foreground leading-[0.95] uppercase">
+              Automations &amp; <br />
+              <span className="text-primary">Custom Business</span> Tools.
+            </h1>
+
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl font-light leading-relaxed">
+              We design and deploy autonomous AI agents, workflow automation engines, and bespoke business intelligence dashboards to scale your operations without friction.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4 pt-4">
+              <Link
+                href="/grow-with-us"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-950 hover:bg-purple-50 font-bold text-xs uppercase tracking-wider transition-colors shadow-lg shadow-purple-950/40"
+              >
+                <span>Build Your Automation</span>
+                <ArrowRight className="w-4 h-4 text-purple-950" />
+              </Link>
+
+              <Link
+                href="/grow-with-us"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-secondary hover:bg-secondary/80 text-muted-foreground border border-border font-semibold text-xs uppercase tracking-wider transition-colors"
+              >
+                <span>Build your tool (Based on business requirement)</span>
+                <ArrowUpRight className="w-4 h-4 text-primary" />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* =========================================================================
-          2. INTERACTIVE NODE-BASED DATA PIPELINE VISUALIZER (STICKY 2-COL)
+          2. CORE FEATURES SECTION (THE 4 EXACT FEATURES)
          ========================================================================= */}
-      <section className="py-16 sm:py-24 border-b border-purple-900/40">
+      <section className="py-20 sm:py-28 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div className="space-y-1">
-              <span className="text-[11px] font-mono text-purple-400 uppercase tracking-widest">
-                // ARCHITECTURE RUNTIME
+              <span className="text-[11px] font-mono text-primary uppercase tracking-widest">
+                // PLATFORM MODULES
               </span>
-              <h2 className="text-3xl sm:text-5xl font-light uppercase tracking-tight text-white">
-                Live Data Pipeline Engine
+              <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-foreground">
+                Core Automation Capabilities
               </h2>
             </div>
-            <p className="text-xs font-mono text-purple-300/80 max-w-sm">
-              Click pipeline nodes to inspect cryptographic payloads and payload transformations in real-time.
+            <p className="text-xs font-mono text-muted-foreground/80 max-w-sm">
+              Custom-engineered software systems tailored to your specific workflows.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left Interactive Node Chain */}
-            <div className="lg:col-span-6 space-y-4">
-              {PIPELINE_NODES.map((node, idx) => {
-                const active = activeNode === idx
-                return (
-                  <div
-                    key={node.id}
-                    onClick={() => setActiveNode(idx)}
-                    className={`p-6 border transition-all cursor-pointer ${
-                      active
-                        ? 'border-purple-400 bg-[#120726] shadow-xl'
-                        : 'border-purple-900/50 bg-[#090312] hover:border-purple-700'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between font-mono text-[10px] mb-2">
-                      <span className="text-purple-400 font-semibold">{node.stage}</span>
-                      <span className="px-2 py-0.5 bg-purple-950 border border-purple-800 text-purple-300">
-                        {node.badge}
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-2 sm:gap-4 md:gap-8">
+            {FEATURES.map((feature) => {
+              const Icon = feature.icon
+              const isExpanded = expandedFeature === feature.title
+
+              return (
+                <div
+                  key={feature.title}
+                  onClick={() => setExpandedFeature(isExpanded ? null : feature.title)}
+                  className={`border border-border bg-card hover:border-primary transition-colors flex flex-col cursor-pointer md:cursor-default ${
+                    isExpanded 
+                      ? 'col-span-2 md:col-span-1 p-6 md:p-8 justify-between' 
+                      : 'col-span-1 md:col-span-1 p-4 md:p-8 aspect-square md:aspect-auto justify-center md:justify-between items-center md:items-stretch'
+                  }`}
+                >
+                  <div className={`space-y-4 md:space-y-6 w-full ${!isExpanded ? 'flex flex-col items-center justify-center h-full md:block md:h-auto' : ''}`}>
+                    <div className={`flex w-full ${isExpanded ? 'justify-between items-start md:items-center' : 'justify-center md:justify-between items-center'}`}>
+                      <div className="p-3 bg-secondary border border-border text-muted-foreground inline-flex items-center justify-center">
+                        <Icon className="w-6 h-6 md:w-5 md:h-5" />
+                      </div>
+                      <span className={`text-[10px] font-mono px-2 py-0.5 bg-secondary border border-border text-muted-foreground uppercase md:block ${isExpanded ? 'block' : 'hidden'}`}>
+                        {feature.category}
                       </span>
                     </div>
 
-                    <h3 className="text-xl font-bold uppercase text-white font-sans">
-                      {node.title}
-                    </h3>
-                    <p className="text-xs text-purple-200/70 mt-2 font-light leading-relaxed font-sans">
-                      {node.desc}
-                    </p>
+                    <div className={`md:block space-y-4 ${isExpanded ? 'block' : 'hidden'}`}>
+                      <h3 className="text-2xl font-bold uppercase text-foreground">
+                        {feature.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+                        {feature.desc}
+                      </p>
 
-                    <div className="mt-4 pt-3 border-t border-purple-900/40 flex items-center justify-between text-[11px] font-mono text-purple-400">
-                      <span>Stack: {node.tech}</span>
-                      <span className="text-white">&rarr; Inspect JSON</span>
+                      <div className="pt-4 space-y-2 border-t border-border">
+                        <span className="text-[10px] font-mono text-primary uppercase tracking-wider block mb-2">
+                          Key Capabilities:
+                        </span>
+                        {feature.capabilities.map((cap) => (
+                          <div key={cap} className="flex items-start gap-2 text-xs text-muted-foreground font-light">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+                            <span>{cap}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                )
-              })}
-            </div>
 
-            {/* Right Sticky Telemetry JSON Inspector */}
-            <div className="lg:col-span-6 sticky top-28 border border-purple-800/80 bg-[#090314] font-mono text-xs overflow-hidden shadow-2xl">
-              <div className="flex items-center justify-between px-4 py-3 bg-[#130728] border-b border-purple-900/60">
-                <div className="flex items-center gap-2">
-                  <GitBranch className="w-4 h-4 text-purple-400" />
-                  <span className="text-purple-300 font-semibold uppercase text-[11px]">
-                    Payload Telemetry // {PIPELINE_NODES[activeNode].id}
-                  </span>
+                  <div className={`md:block pt-6 border-t border-border mt-6 ${isExpanded ? 'block' : 'hidden'}`}>
+                    <Link
+                      href="/grow-with-us"
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex items-center gap-1 text-xs font-semibold uppercase text-muted-foreground hover:text-foreground"
+                    >
+                      <span>Deploy module</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
                 </div>
-                <div className="text-[10px] text-emerald-400 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  STATUS: LIVE PIPE
-                </div>
-              </div>
-
-              <div className="p-6 space-y-4">
-                <div className="text-[11px] text-zinc-400">
-                  <span className="text-purple-400">// Handled by:</span> {PIPELINE_NODES[activeNode].tech}
-                </div>
-
-                <div className="bg-[#05020c] p-4 border border-purple-900/60 overflow-x-auto text-purple-200 text-[11px] leading-relaxed">
-                  <pre>{PIPELINE_NODES[activeNode].payload}</pre>
-                </div>
-
-                <div className="p-3 bg-purple-950/30 border border-purple-900/40 text-[11px] text-purple-300 flex items-center justify-between">
-                  <span>Execution Latency:</span>
-                  <span className="font-bold text-emerald-400">{PIPELINE_NODES[activeNode].badge}</span>
-                </div>
-              </div>
-            </div>
+              )
+            })}
           </div>
         </div>
       </section>
 
       {/* =========================================================================
-          3. FINANCIAL IMPACT & ROI RECOVERY MODEL
+          3. INTERACTIVE TOOL BUILDER CONFIGURATOR
          ========================================================================= */}
-      <section className="py-16 sm:py-24 border-b border-purple-900/40">
+      <section className="py-20 sm:py-28 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
           <div className="space-y-1">
-            <span className="text-[11px] font-mono text-purple-400 uppercase tracking-widest">
-              // FINANCIAL IMPACT MODEL
+            <span className="text-[11px] font-mono text-primary uppercase tracking-widest">
+              // INTERACTIVE BUILDER
             </span>
-            <h2 className="text-3xl sm:text-5xl font-light uppercase tracking-tight text-white">
-              Pipeline Recovery Calculation
+            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-foreground">
+              Configure Your Automation Stack
             </h2>
           </div>
 
-          <div className="p-8 sm:p-12 border border-purple-800 bg-[#0d061c] grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            <div className="lg:col-span-6 space-y-8">
-              {/* Slider 1 */}
-              <div className="space-y-2">
-                <div className="flex justify-between items-center font-mono text-xs">
-                  <span className="text-purple-300 uppercase">Monthly Inbound Inquiries:</span>
-                  <span className="text-lg font-bold text-white">{inquiries} Leads</span>
+          <div className="p-8 sm:p-12 border border-border bg-card grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-7 space-y-8">
+              <div className="space-y-3">
+                <span className="text-xs font-mono text-primary uppercase tracking-wider block">
+                  1. Select Industry Pack:
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {INDUSTRY_PACKS_LIST.map((pack, idx) => (
+                    <button
+                      key={pack.name}
+                      type="button"
+                      onClick={() => setSelectedPack(idx)}
+                      className={`p-4 text-left border text-xs font-mono transition-colors cursor-pointer ${
+                        selectedPack === idx
+                          ? 'border-purple-400 bg-secondary text-foreground shadow-md shadow-purple-950/50'
+                          : 'border-border bg-background/80 text-muted-foreground/70 hover:border-border'
+                      }`}
+                    >
+                      <div className="font-bold text-sm text-foreground mb-1">{pack.name}</div>
+                      <div className="text-[10px] text-primary">{pack.features.length} Workflows Included</div>
+                    </button>
+                  ))}
                 </div>
-                <input
-                  type="range"
-                  min="50"
-                  max="1500"
-                  step="25"
-                  value={inquiries}
-                  onChange={(e) => setInquiries(Number(e.target.value))}
-                  className="w-full accent-purple-500 cursor-pointer h-1.5 bg-purple-950 rounded-none"
-                />
               </div>
 
-              {/* Slider 2 */}
-              <div className="space-y-2">
-                <div className="flex justify-between items-center font-mono text-xs">
-                  <span className="text-purple-300 uppercase">Average Order / Deal Value:</span>
-                  <span className="text-lg font-bold text-white">₹{dealValue.toLocaleString('en-IN')}</span>
+              <div className="space-y-3">
+                <span className="text-xs font-mono text-primary uppercase tracking-wider block">
+                  2. Select Required System Modules:
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {FEATURES.map((feat) => {
+                    const isSelected = selectedModules.includes(feat.title)
+                    return (
+                      <button
+                        key={feat.title}
+                        type="button"
+                        onClick={() => toggleModule(feat.title)}
+                        className={`p-4 text-left border text-xs transition-colors cursor-pointer flex items-center justify-between ${
+                          isSelected
+                            ? 'border-purple-400 bg-secondary text-foreground shadow-md shadow-purple-950/50'
+                            : 'border-border bg-background/80 text-muted-foreground/70 hover:border-border'
+                        }`}
+                      >
+                        <span className="font-semibold">{feat.title}</span>
+                        {isSelected ? (
+                          <CheckCircle2 className="w-4 h-4 text-muted-foreground" />
+                        ) : (
+                          <div className="w-4 h-4 border border-border rounded-sm" />
+                        )}
+                      </button>
+                    )
+                  })}
                 </div>
-                <input
-                  type="range"
-                  min="5000"
-                  max="100000"
-                  step="2500"
-                  value={dealValue}
-                  onChange={(e) => setDealValue(Number(e.target.value))}
-                  className="w-full accent-purple-500 cursor-pointer h-1.5 bg-purple-950 rounded-none"
-                />
               </div>
-
-              <p className="text-xs text-purple-300/70 font-light leading-relaxed">
-                Calculations based on an industry baseline 38% inquiry abandonment when response time exceeds 15 minutes, reduced to zero with Busigrow sub-5s WhatsApp routing.
-              </p>
             </div>
 
-            <div className="lg:col-span-6 grid grid-cols-2 gap-4 font-mono">
-              <div className="p-5 bg-purple-950/30 border border-purple-900/50">
-                <span className="text-[10px] text-purple-400 uppercase tracking-wider block">RECOVERED LEADS / MO</span>
-                <span className="text-3xl font-bold text-white mt-1 block">+{recoveredInquiries}</span>
+            {/* Architecture Preview Box */}
+            <div className="lg:col-span-5 p-6 sm:p-8 bg-background border border-purple-900/80 space-y-6 flex flex-col justify-between font-mono text-xs">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between border-b border-border pb-3">
+                  <span className="text-primary uppercase tracking-wider text-[10px]">
+                    SYSTEM BLUEPRINT
+                  </span>
+                  <span className="text-[10px] text-muted-foreground">READY TO DEPLOY</span>
+                </div>
+
+                <div>
+                  <span className="text-primary/80 uppercase text-[10px] block mb-1">Target Domain:</span>
+                  <div className="text-foreground text-sm font-bold font-sans">
+                    {INDUSTRY_PACKS_LIST[selectedPack].name}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <span className="text-primary/80 uppercase text-[10px] block">Selected Modules:</span>
+                  {selectedModules.map((m) => (
+                    <div key={m} className="flex items-center gap-2 text-muted-foreground">
+                      <div className="w-1.5 h-1.5 bg-purple-400" />
+                      <span>{m}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-4 bg-secondary/40 border border-border text-[11px] text-muted-foreground space-y-1">
+                  <div className="text-primary uppercase text-[9px]">Included Automations:</div>
+                  {INDUSTRY_PACKS_LIST[selectedPack].features.map((f) => (
+                    <div key={f} className="text-muted-foreground text-[11px] font-sans">&bull; {f}</div>
+                  ))}
+                </div>
               </div>
-              <div className="p-5 bg-purple-950/30 border border-purple-900/50">
-                <span className="text-[10px] text-purple-400 uppercase tracking-wider block">REVENUE RECOVERED / MO</span>
-                <span className="text-3xl font-bold text-emerald-400 mt-1 block">₹{recoveredRevenue.toLocaleString('en-IN')}</span>
-              </div>
-              <div className="p-5 bg-purple-950/30 border border-purple-900/50">
-                <span className="text-[10px] text-purple-400 uppercase tracking-wider block">MANUAL HOURS SAVED</span>
-                <span className="text-3xl font-bold text-purple-300 mt-1 block">{savedHours}h</span>
-              </div>
-              <div className="p-5 bg-purple-950/30 border border-purple-900/50">
-                <span className="text-[10px] text-purple-400 uppercase tracking-wider block">LEAD ENGAGEMENT SLA</span>
-                <span className="text-3xl font-bold text-white mt-1 block">&lt; 5s</span>
+
+              <div className="pt-6 border-t border-border space-y-3">
+                <Link
+                  href="/grow-with-us"
+                  className="w-full py-3.5 bg-white hover:bg-purple-50 text-purple-950 font-bold text-xs uppercase tracking-wider text-center block transition-colors font-sans shadow-lg shadow-purple-950/40"
+                >
+                  Build Your Automation
+                </Link>
+
+                <Link
+                  href="/grow-with-us"
+                  className="w-full py-3 bg-secondary hover:bg-secondary/80 text-muted-foreground border border-border font-semibold text-[11px] uppercase tracking-wider text-center block transition-colors font-sans"
+                >
+                  Build your tool (Based on business requirement)
+                </Link>
               </div>
             </div>
           </div>
@@ -339,25 +375,34 @@ export default function AutomationsPage() {
          ========================================================================= */}
       <section className="py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="p-10 sm:p-16 border border-purple-800 bg-[#120726] text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          <div className="p-10 sm:p-16 border border-border bg-gradient-to-br from-primary/20 via-primary/10 to-background text-foreground flex flex-col md:flex-row items-start md:items-center justify-between gap-8 shadow-2xl">
             <div className="space-y-3 max-w-xl">
-              <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-purple-900/50 border border-purple-700 text-purple-300">
-                DISPATCH ARCHITECTURE
+              <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-secondary border border-border text-muted-foreground">
+                CUSTOM ENGINEERING
               </span>
-              <h3 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight">
-                Stop losing high-intent leads to delayed responses.
+              <h3 className="text-3xl sm:text-4xl font-black uppercase tracking-tight">
+                Have a unique operational bottleneck?
               </h3>
-              <p className="text-xs sm:text-sm text-purple-200/80 font-light leading-relaxed">
-                Connect your Meta Ads, Google Ads, and website directly to a high-converting WhatsApp CRM funnel.
+              <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+                Our engineering team builds tailored software tools, integrations, and intelligent automation systems directly for your workflow.
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <Link
                 href="/grow-with-us"
-                className="px-8 py-4 bg-white hover:bg-purple-50 text-purple-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-xl"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-purple-950 hover:bg-purple-50 font-bold text-xs uppercase tracking-wider transition-colors shadow-xl"
               >
-                <span>grow with us &rarr;</span>
+                <span>Build Your Automation</span>
+                <ArrowRight className="w-4 h-4 text-purple-950" />
+              </Link>
+
+              <Link
+                href="/grow-with-us"
+                className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-secondary hover:bg-secondary/80 text-muted-foreground border border-border font-bold text-xs uppercase tracking-wider transition-colors"
+              >
+                <span>Build your tool (Based on business requirement)</span>
+                <ArrowUpRight className="w-4 h-4 text-primary" />
               </Link>
             </div>
           </div>

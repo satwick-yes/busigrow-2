@@ -8,12 +8,12 @@ export function Header() {
           <div className="flex items-center space-x-8">
             <div className="text-foreground font-light text-lg tracking-wide">Brillance</div>
             <div className="hidden md:flex items-center space-x-8">
-              <button className="text-slate-700 hover:text-foreground text-sm font-light transition-colors">Products</button>
-              <button className="text-slate-700 hover:text-foreground text-sm font-light transition-colors">Pricing</button>
-              <button className="text-slate-700 hover:text-foreground text-sm font-light transition-colors">Docs</button>
+              <button className="text-foreground hover:text-foreground text-sm font-light transition-colors">Products</button>
+              <button className="text-foreground hover:text-foreground text-sm font-light transition-colors">Pricing</button>
+              <button className="text-foreground hover:text-foreground text-sm font-light transition-colors">Docs</button>
             </div>
           </div>
-          <Button variant="ghost" className="text-slate-700 hover:bg-white/20 font-light">
+          <Button variant="ghost" className="text-foreground hover:bg-white/20 font-light">
             Log in
           </Button>
         </nav>

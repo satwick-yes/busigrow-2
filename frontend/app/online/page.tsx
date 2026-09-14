@@ -2,289 +2,267 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Navbar } from '@/components/navbar'
 import FooterSection from '@/components/footer-section'
 import {
+  Video,
+  Palette,
   Code2,
+  Share2,
+  Users,
+  Fingerprint,
   Cpu,
-  Layers,
-  Zap,
-  Globe,
+  PenTool,
+  Megaphone,
   ArrowRight,
-  Terminal,
-  Check,
+  ArrowUpRight,
+  CheckCircle2,
+  Layers,
   Sparkles,
-  ExternalLink,
-  MessageSquare,
-  Server
+  ShieldCheck
 } from 'lucide-react'
 
-const STACK_MODULES = [
-  {
-    id: 'next-runtime',
-    title: 'Next.js 14 Sub-Second App Router',
-    tagline: 'Headless React 19 Server Components',
-    metric: '18ms',
-    metricLabel: 'Edge TTFB Latency',
-    desc: 'Bespoke sub-second edge runtime architecture with streaming SSR, dynamic OpenGraph image generation, and zero hydration layout shifts.',
-    code: `// edge-route-engine.ts
-import { NextResponse } from 'next/server'
-export const runtime = 'edge'
+const FADE_UP = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
+}
 
-export async function GET(req: Request) {
-  const telemetry = await fetchTelemetry({ region: 'bom1-edge' })
-  return NextResponse.json({
-    status: 200,
-    ttfb: '18ms',
-    lighthouse: 100,
-    edgeRegion: 'Delhi-NCR'
-  })
-}`
+const SERVICES = [
+  {
+    title: 'Video Ads',
+    desc: 'High-converting short-form, UGC, motion graphics, and commercial video ad creatives ready for ad networks.',
+    icon: Video,
+    category: 'Creative Production'
   },
   {
-    id: 'tailwind-tokens',
-    title: 'Atomic CSS Design Token System',
-    tagline: 'Zero-Runtime CSS Variable Orchestration',
-    metric: '100/100',
-    metricLabel: 'Lighthouse Performance',
-    desc: 'Fluid responsive typographic scales, hairline 1px structural grids, and dynamic theme tokens optimized for sub-10kB critical CSS footprints.',
-    code: `/* theme-tokens.css */
-:root {
-  --primary-violet: #7c3aed;
-  --primary-purple: #9333ea;
-  --dark-ground: #070310;
-  --hairline-border: rgba(147, 51, 234, 0.35);
-  --font-mono: 'JetBrains Mono', monospace;
-}`
+    title: 'Graphic design',
+    desc: 'Bespoke brand collateral, digital ad banners, social creatives, vector assets, and marketing collateral.',
+    icon: Palette,
+    category: 'Visual Systems'
   },
   {
-    id: 'lead-pipeline',
-    title: 'Real-Time Edge Lead Capture API',
-    tagline: 'Instant Webhook Dispatches to WhatsApp',
-    metric: '1.2s',
-    metricLabel: 'Dispatch to CRM Trigger',
-    desc: 'Serverless Edge Functions stream visitor RFPs straight to WhatsApp Business API with zero database bottleneck or dropped inquiries.',
-    code: `// api/lead-intake/route.ts
-export async function POST(req: Request) {
-  const { brand, budget, substrate } = await req.json()
-  await dispatchToWhatsAppCRM({
-    targetPhone: '+919876543210',
-    payload: { brand, budget, substrate, time: Date.now() }
-  })
-  return Response.json({ success: true, sla: 'Sub-3s Bot Response' })
-}`
+    title: 'Web-development',
+    desc: 'High-performance Next.js websites, conversion funnels, landing pages, and custom web applications.',
+    icon: Code2,
+    category: 'Engineering'
+  },
+  {
+    title: 'Social Marketing',
+    desc: 'Organic distribution, community growth frameworks, platform-specific content playbooks, and engagement.',
+    icon: Share2,
+    category: 'Distribution'
+  },
+  {
+    title: 'Influencer marketing',
+    desc: 'End-to-end creator scouting, contract negotiation, brief curation, and ROI-tracked influencer activations.',
+    icon: Users,
+    category: 'Creator Network'
+  },
+  {
+    title: 'Branding & Identity',
+    desc: 'Comprehensive visual systems, logo suites, brand guideline books, typography hierarchies, and style guides.',
+    icon: Fingerprint,
+    category: 'Identity Systems'
+  },
+  {
+    title: 'AI & Automation',
+    desc: 'Custom AI agent builders, programmatic content workflows, and automated customer acquisition engines.',
+    icon: Cpu,
+    category: 'Intelligent Tech'
+  },
+  {
+    title: 'Content Creation',
+    desc: 'Editorial copy, thought leadership articles, multi-platform media assets, and high-impact copywriting.',
+    icon: PenTool,
+    category: 'Storytelling'
+  },
+  {
+    title: 'Online Campaign',
+    desc: 'Full-funnel digital ad management, paid media acquisition, multi-channel scaling, and conversion optimization.',
+    icon: Megaphone,
+    category: 'Performance'
+  }
+]
+
+const AGENCY_BENEFITS = [
+  {
+    title: 'Plug-and-Play Creative Engine',
+    desc: 'Scale your agency output without hiring overhead. We act as your specialized production engine.'
+  },
+  {
+    title: 'Ready-Made Deliverables',
+    desc: 'Instant access to high-velocity design, ad frameworks, and development sprints ready for deployment.'
+  },
+  {
+    title: 'Strict Quality Standards',
+    desc: 'Every asset is crafted to institutional design standards, fully layered, organized, and review-ready.'
+  },
+  {
+    title: 'Transparent Collaboration',
+    desc: 'Clear communication, rapid feedback cycles, and dedicated project managers for every account.'
   }
 ]
 
 export default function OnlinePage() {
-  const [activeTab, setActiveTab] = useState(0)
-  const [copiedCode, setCopiedCode] = useState(false)
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(STACK_MODULES[activeTab].code)
-    setCopiedCode(true)
-    setTimeout(() => setCopiedCode(false), 2000)
-  }
+  const [expandedService, setExpandedService] = useState<string | null>(null)
 
   return (
-    <div className="w-full min-h-screen bg-[#070310] text-zinc-100 font-sans selection:bg-purple-600 selection:text-white">
+    <div className="relative w-full min-h-screen bg-background text-foreground font-sans selection:bg-purple-600 selection:text-foreground overflow-x-hidden">
       <Navbar />
 
       {/* =========================================================================
-          1. HERO SECTION: HYPER-DIGITAL VERCEL/LINEAR GRADE
+          1. HERO SECTION (VENDOR FOR AGENCIES)
          ========================================================================= */}
-      <section className="pt-28 sm:pt-36 pb-16 border-b border-purple-900/40 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 space-y-6">
-          <div className="flex flex-wrap items-center gap-3">
-            <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-purple-950/80 border border-purple-800 text-purple-300">
-              PILLAR 02 // DIGITAL ARCHITECTURE &amp; WEB ENGINEERING
-            </span>
-            <span className="text-[11px] font-mono text-purple-400 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              EDGE RUNTIME: GLOBAL EDGE
-            </span>
-          </div>
-
-          <h1 className="text-4xl sm:text-7xl lg:text-8xl font-black uppercase tracking-[-0.04em] text-white leading-[0.92]">
-            Sub-Second <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-violet-300">
-              Digital
-            </span>{' '}
-            Engines.
-          </h1>
-
-          <p className="text-sm sm:text-base md:text-lg text-purple-200/70 max-w-2xl font-light leading-relaxed">
-            Headless Next.js storefronts, dynamic conversion funnels, and edge-rendered web platforms. We engineer high-velocity digital architectures with zero template bloat.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-4 pt-4">
-            <Link
-              href="/grow-with-us"
-              className="inline-flex items-center gap-2 px-7 py-4 bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs uppercase tracking-wider transition-colors shadow-lg shadow-purple-900/40"
-            >
-              <span>Engineer My Digital Engine</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-
-            <a
-              href="https://wa.me/919876543210?text=Hi%20Busigrow!%20I%20want%20to%20review%20my%20web%20stack."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-4 bg-purple-950/40 hover:bg-purple-900/40 text-purple-300 border border-purple-800 font-medium text-xs uppercase tracking-wider transition-colors"
-            >
-              <MessageSquare className="w-4 h-4 text-purple-400" />
-              <span>Talk to Solutions Architect</span>
-            </a>
-          </div>
-
-          {/* Animated Count-Up Metrics Bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 border-t border-purple-900/40 font-mono">
-            <div className="p-4 bg-purple-950/20 border border-purple-900/40">
-              <div className="text-3xl sm:text-4xl font-bold text-white tracking-tight">18MS</div>
-              <div className="text-[10px] text-purple-400 uppercase tracking-wider mt-1">EDGE SERVER TTFB</div>
+      <section className="relative pt-28 sm:pt-36 pb-20 sm:pb-28 border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="space-y-8 max-w-4xl">
+            <div className="inline-flex items-center gap-2">
+              <span className="text-[11px] font-mono tracking-widest uppercase px-3 py-1 bg-secondary border border-border text-muted-foreground">
+                CREATIVE &amp; DIGITAL VENDOR
+              </span>
             </div>
-            <div className="p-4 bg-purple-950/20 border border-purple-900/40">
-              <div className="text-3xl sm:text-4xl font-bold text-purple-300 tracking-tight">100/100</div>
-              <div className="text-[10px] text-purple-400 uppercase tracking-wider mt-1">LIGHTHOUSE AUDIT</div>
-            </div>
-            <div className="p-4 bg-purple-950/20 border border-purple-900/40">
-              <div className="text-3xl sm:text-4xl font-bold text-emerald-400 tracking-tight">99.99%</div>
-              <div className="text-[10px] text-purple-400 uppercase tracking-wider mt-1">EDGE AVAILABILITY</div>
-            </div>
-            <div className="p-4 bg-purple-950/20 border border-purple-900/40">
-              <div className="text-3xl sm:text-4xl font-bold text-white tracking-tight">0 MS</div>
-              <div className="text-[10px] text-purple-400 uppercase tracking-wider mt-1">LAYOUT SHIFT (CLS)</div>
+
+            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-[-0.04em] text-foreground leading-[0.95] uppercase">
+              Production Partner <br />
+              <span className="text-primary">For Modern Agencies</span> &amp; Brands.
+            </h1>
+
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl font-light leading-relaxed">
+              Your go-to production vendor for ready-made ads, custom design systems, web development, and digital marketing campaigns. High velocity, zero friction.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4 pt-4">
+              <Link
+                href="/grow-with-us"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-950 hover:bg-purple-50 font-bold text-xs uppercase tracking-wider transition-colors shadow-lg shadow-purple-950/40"
+              >
+                <span>Partner With Us</span>
+                <ArrowRight className="w-4 h-4 text-purple-950" />
+              </Link>
+
+              <Link
+                href="/campaigns"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-secondary hover:bg-secondary/80 text-muted-foreground border border-border font-semibold text-xs uppercase tracking-wider transition-colors"
+              >
+                <span>Ready Made Brands</span>
+                <ArrowUpRight className="w-4 h-4 text-primary" />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* =========================================================================
-          2. INTERACTIVE ARCHITECTURE TERMINAL & CODE RUNNER
+          2. SERVICES LIST (THE EXACT 9 SERVICES)
          ========================================================================= */}
-      <section className="py-16 sm:py-24 border-b border-purple-900/40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10">
+      <section className="py-20 sm:py-28 border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div className="space-y-1">
-              <span className="text-[11px] font-mono text-purple-400 uppercase tracking-widest">
-                // ARCHITECTURE BLUEPRINT
+              <span className="text-[11px] font-mono text-primary uppercase tracking-widest">
+                // FULL CAPABILITIES
               </span>
-              <h2 className="text-3xl sm:text-5xl font-light uppercase tracking-tight text-white">
-                Developer-Grade Infrastructure
+              <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-foreground">
+                Digital &amp; Creative Services
               </h2>
             </div>
-            <p className="text-xs font-mono text-purple-300/80 max-w-sm">
-              Inspect our production-grade Next.js 14 App Router, design tokens, and Edge API pipeline code.
+            <p className="text-xs font-mono text-muted-foreground/80 max-w-sm">
+              Integrated creative, engineering, and performance marketing modules for scale.
             </p>
           </div>
 
-          {/* Terminal Window Chrome */}
-          <div className="border border-purple-800/80 bg-[#090312] font-mono text-xs overflow-hidden shadow-2xl">
-            {/* Header Tabs */}
-            <div className="flex flex-wrap items-center justify-between px-4 py-3 bg-[#130726] border-b border-purple-900/60">
-              <div className="flex items-center gap-3">
-                <div className="flex gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block" />
-                </div>
-                <div className="flex gap-2 ml-4">
-                  {STACK_MODULES.map((mod, idx) => (
-                    <button
-                      key={mod.id}
-                      onClick={() => setActiveTab(idx)}
-                      className={`px-3 py-1 text-[11px] uppercase tracking-wider transition-colors cursor-pointer ${
-                        activeTab === idx
-                          ? 'bg-purple-900/60 text-white border-b-2 border-purple-400'
-                          : 'text-zinc-500 hover:text-zinc-300'
-                      }`}
+          <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 md:gap-6">
+            {SERVICES.map((s) => {
+              const Icon = s.icon
+              const isExpanded = expandedService === s.title
+
+              return (
+                <div
+                  key={s.title}
+                  onClick={() => setExpandedService(isExpanded ? null : s.title)}
+                  className={`border border-border bg-card hover:border-primary transition-colors flex flex-col cursor-pointer md:cursor-default ${
+                    isExpanded 
+                      ? 'col-span-3 md:col-span-1 p-6 md:p-8 justify-between' 
+                      : 'col-span-1 md:col-span-1 p-4 md:p-8 aspect-square md:aspect-auto justify-center md:justify-between items-center md:items-stretch'
+                  }`}
+                >
+                  <div className={`space-y-4 md:space-y-6 w-full ${!isExpanded ? 'flex flex-col items-center justify-center h-full md:block md:h-auto' : ''}`}>
+                    <div className={`flex w-full ${isExpanded ? 'justify-between items-start md:items-center' : 'justify-center md:justify-between items-center'}`}>
+                      <div className="p-3 bg-secondary border border-border text-foreground inline-flex items-center justify-center">
+                        <Icon className="w-6 h-6 md:w-5 md:h-5" />
+                      </div>
+                      <span className={`text-[10px] font-mono px-2 py-0.5 bg-secondary border border-border text-muted-foreground uppercase md:block ${isExpanded ? 'block' : 'hidden'}`}>
+                        {s.category}
+                      </span>
+                    </div>
+
+                    {/* Desktop Content & Expanded Mobile Content */}
+                    <div className={`md:block space-y-4 ${isExpanded ? 'block' : 'hidden'}`}>
+                      <h3 className="text-xl font-bold uppercase text-foreground">
+                        {s.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+                        {s.desc}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className={`md:block pt-4 border-t border-border mt-6 ${isExpanded ? 'block' : 'hidden'}`}>
+                    <Link
+                      href="/grow-with-us"
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex items-center gap-1 text-xs font-semibold uppercase text-muted-foreground hover:text-foreground"
                     >
-                      {mod.title.split(' ')[0]}
-                    </button>
-                  ))}
+                      <span>Request scope</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
                 </div>
-              </div>
-
-              <button
-                onClick={handleCopy}
-                className="text-[10px] text-purple-300 hover:text-white px-2.5 py-1 border border-purple-800/60 bg-purple-950/40 uppercase tracking-wider transition-colors"
-              >
-                {copiedCode ? 'COPIED TO CLIPBOARD' : 'COPY SNIPPET'}
-              </button>
-            </div>
-
-            {/* Terminal Body */}
-            <div className="p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              <div className="lg:col-span-7 space-y-4">
-                <div className="text-purple-400 text-[11px]">
-                  // {STACK_MODULES[activeTab].tagline}
-                </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white font-sans">
-                  {STACK_MODULES[activeTab].title}
-                </h3>
-                <p className="text-xs text-purple-200/70 font-sans leading-relaxed">
-                  {STACK_MODULES[activeTab].desc}
-                </p>
-
-                <div className="p-4 bg-purple-950/30 border border-purple-900/50 flex items-center justify-between">
-                  <span className="text-zinc-400 text-xs">{STACK_MODULES[activeTab].metricLabel}:</span>
-                  <span className="text-xl font-bold text-emerald-400 font-mono">{STACK_MODULES[activeTab].metric}</span>
-                </div>
-              </div>
-
-              <div className="lg:col-span-5 bg-[#05020c] p-4 border border-purple-900/60 overflow-x-auto text-purple-200 text-[11px] leading-relaxed">
-                <pre>{STACK_MODULES[activeTab].code}</pre>
-              </div>
-            </div>
+              )
+            })}
           </div>
         </div>
       </section>
 
       {/* =========================================================================
-          3. BENTO GRID OF 5 CORE ONLINE CAPABILITIES
+          3. AGENCY PARTNERSHIP MODEL
          ========================================================================= */}
-      <section className="py-16 sm:py-24 border-b border-purple-900/40">
+      <section className="py-20 sm:py-28 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
           <div className="space-y-1">
-            <span className="text-[11px] font-mono text-purple-400 uppercase tracking-widest">
-              // FIVE DIGITAL DISCIPLINES
+            <span className="text-[11px] font-mono text-primary uppercase tracking-widest">
+              // COLLABORATION
             </span>
-            <h2 className="text-3xl sm:text-5xl font-light uppercase tracking-tight text-white">
-              Full-Stack Digital Execution
+            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-foreground">
+              Why Agencies Partner With Us
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-8 border border-purple-900/50 bg-[#0a0414] space-y-4 hover:border-purple-500 transition-colors">
-              <div className="w-10 h-10 bg-purple-950 border border-purple-800 flex items-center justify-center text-purple-400">
-                <Code2 className="w-5 h-5" />
-              </div>
-              <h3 className="text-xl font-bold uppercase text-white">Web &amp; App Engineering</h3>
-              <p className="text-xs text-purple-200/70 leading-relaxed font-light">
-                Sub-second Next.js edge web apps, custom checkout engines, and headless CMS integrations designed for explosive conversions.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {AGENCY_BENEFITS.map((item, idx) => (
+              <div
+                key={item.title}
+                className="p-8 border border-border bg-card space-y-4 hover:border-primary transition-colors flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <span className="text-3xl font-mono font-bold text-primary/60">
+                    0{idx + 1}
+                  </span>
+                  <h3 className="text-lg font-bold uppercase text-foreground">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
 
-            <div className="p-8 border border-purple-900/50 bg-[#0a0414] space-y-4 hover:border-purple-500 transition-colors">
-              <div className="w-10 h-10 bg-purple-950 border border-purple-800 flex items-center justify-center text-purple-400">
-                <Layers className="w-5 h-5" />
+                <div className="pt-4 border-t border-border text-[10px] font-mono text-primary uppercase">
+                  Standard Vendor Protocol
+                </div>
               </div>
-              <h3 className="text-xl font-bold uppercase text-white">UI/UX Design Systems</h3>
-              <p className="text-xs text-purple-200/70 leading-relaxed font-light">
-                Figma design tokens, brutalist typography systems, and interaction physics that turn casual visitors into high-LTV customers.
-              </p>
-            </div>
-
-            <div className="p-8 border border-purple-900/50 bg-[#0a0414] space-y-4 hover:border-purple-500 transition-colors">
-              <div className="w-10 h-10 bg-purple-950 border border-purple-800 flex items-center justify-center text-purple-400">
-                <Zap className="w-5 h-5" />
-              </div>
-              <h3 className="text-xl font-bold uppercase text-white">Performance Acquisition</h3>
-              <p className="text-xs text-purple-200/70 leading-relaxed font-light">
-                Meta, Google Search, and dynamic retargeting campaigns optimized daily with algorithmic bid allocation and live ROAS dashboards.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -294,25 +272,26 @@ export default function OnlinePage() {
          ========================================================================= */}
       <section className="py-20 sm:py-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="p-10 sm:p-16 border border-purple-800 bg-[#120726] text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          <div className="p-10 sm:p-16 border border-border bg-gradient-to-br from-primary/20 via-primary/10 to-background text-foreground flex flex-col md:flex-row items-start md:items-center justify-between gap-8 shadow-2xl">
             <div className="space-y-3 max-w-xl">
-              <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-purple-900/50 border border-purple-700 text-purple-300">
-                DIRECT ARCHITECT CONSULTATION
+              <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-secondary border border-border text-muted-foreground">
+                PARTNER ONBOARDING
               </span>
-              <h3 className="text-3xl sm:text-4xl font-bold uppercase tracking-tight">
-                Ready to ship your next web application?
+              <h3 className="text-3xl sm:text-4xl font-black uppercase tracking-tight">
+                Need reliable design &amp; dev capacity?
               </h3>
-              <p className="text-xs sm:text-sm text-purple-200/80 font-light leading-relaxed">
-                Schedule a 20-minute code audit or request a detailed architectural scope for your brand.
+              <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+                Connect with our production desk to review current capacities, asset packages, and custom scopes.
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4">
+            <div>
               <Link
                 href="/grow-with-us"
-                className="px-8 py-4 bg-white hover:bg-purple-50 text-purple-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-xl"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-950 hover:bg-purple-50 font-bold text-xs uppercase tracking-wider transition-colors shadow-xl"
               >
-                <span>grow with us &rarr;</span>
+                <span>Let&apos;s grow</span>
+                <ArrowRight className="w-4 h-4 text-purple-950" />
               </Link>
             </div>
           </div>

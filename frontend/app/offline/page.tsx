@@ -2,149 +2,176 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Navbar } from '@/components/navbar'
 import FooterSection from '@/components/footer-section'
 import {
-  Hammer,
-  Shield,
   Clock,
   ArrowRight,
-  Check,
-  X,
-  FileText,
-  Sliders,
-  ExternalLink,
-  MessageSquare
+  Printer,
+  Sparkles,
+  Users,
+  Compass,
+  CheckCircle2,
+  ArrowUpRight,
+  Shield,
+  Layers,
+  Wrench,
+  Car,
+  Lightbulb,
+  Building,
+  Target,
+  Palette
 } from 'lucide-react'
 
-const SUBSTRATES = [
+const FADE_UP = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
+}
+
+const SERVICES = [
   {
-    id: 'acrylic-3d',
-    title: '3D Cast Acrylic & Samsung LED',
-    tagline: 'High-Density PMMA Optical Grade',
-    image: '/storefront.jpg',
-    specs: {
-      diode: 'Samsung SMD2835 IP67 (160° Optical Lens)',
-      lux: '8,500 – 12,000 Lux Day/Night Calibration',
-      tensile: '75 MPa Tensile Strength PMMA',
-      windLoad: 'Engineered for 160 km/h Gusts',
-      warranty: '5 Years Replacement Warranty',
-      dispatch: '24–48 Hours Delhi NCR'
-    },
-    blueprint: 'CNC router cut 30mm cast acrylic face, 1.2mm SS304 return edge, silicone gasket water-tight enclosure.',
-    rate: '₹460 / sq.ft'
+    title: 'Printing',
+    desc: 'Large format, flex, vinyl, backlit, and precision direct-to-substrate commercial printing.',
+    icon: Printer,
+    highlight: '24h Turnaround'
   },
   {
-    id: 'ss304-titanium',
-    title: 'SS304 Titanium Marine Metal',
-    tagline: 'PVD Coated Heavy Architectural Alloy',
-    image: '/case-pizza-billboard.jpg',
-    specs: {
-      diode: 'Embedded High-Lux Backlit Halo Diode',
-      lux: '6,200 Lux Ambient Halo Projection',
-      tensile: '515 MPa Yield Marine Grade SS304',
-      windLoad: 'Engineered for 210 km/h High-Altitude',
-      warranty: '10 Years Zero-Corrosion Guarantee',
-      dispatch: '48–72 Hours Delhi NCR'
-    },
-    blueprint: 'Fiber laser cut 1.5mm SS304 plate, TIG welded structural seams, titanium PVD electro-plated finish.',
-    rate: '₹740 / sq.ft'
+    title: 'Designing',
+    desc: 'Custom architectural layouts, 3D retail renderings, signage vectors, and print-ready production files.',
+    icon: Palette,
+    highlight: 'In-house Team'
   },
   {
-    id: 'acp-facade',
-    title: 'PVDF Heavy Architectural ACP',
-    tagline: '0.5mm Coil Aluminum Composite Cladding',
-    image: '/fleet.jpg',
-    specs: {
-      diode: 'Linear Edge-Lit & Recessed Spot Modules',
-      lux: 'Uniform Architectural Surface Illumination',
-      tensile: 'Mineral-Filled Fire Retardant Core Class B1',
-      windLoad: 'Tested to ASTM E330 Structural Deflection',
-      warranty: '10 Years Kynar 500 PVDF Anti-Fade',
-      dispatch: '48 Hours Delhi NCR'
-    },
-    blueprint: 'V-grooved CNC routed 4mm ACP panels with 0.50mm coil skin, blind-riveted to 50x50mm MS structural framework.',
-    rate: '₹390 / sq.ft'
+    title: 'Installation',
+    desc: 'Trained nighttime and day rigging crews for storefronts, building wraps, high-dwell sites, and interior signs.',
+    icon: Wrench,
+    highlight: 'On-site Crews'
   },
   {
-    id: 'neon-silicone',
-    title: 'IP68 Extruded Silicone Neon',
-    tagline: 'Continuous Diffusion Solid State Flexible Core',
-    image: '/case-pizza-billboard.jpg',
-    specs: {
-      diode: '120 LED/m Epistar High-CRI 90+',
-      lux: '1,400 Lumens / Meter Continuous Uniform Glow',
-      tensile: 'Food-Grade UV-Stabilized Silicone Extrusion',
-      windLoad: 'Flexible Direct Substrate Mechanical Mounting',
-      warranty: '3 Years Uninterrupted Duty Cycle',
-      dispatch: '24 Hours Delhi NCR'
-    },
-    blueprint: 'Dual-extrusion silicone channel with internal copper PCB trace, IP68 molded waterproof terminal caps.',
-    rate: '₹360 / sq.ft'
+    title: 'OEM Suppliers team (Multiple Supplier)',
+    desc: 'Direct manufacturer sourcing across metals, acrylics, LED modules, and raw substrates with quality grading.',
+    icon: Layers,
+    highlight: 'Direct Sourcing'
+  },
+  {
+    title: 'Branding Placement (inside autos)',
+    desc: 'High-visibility transit advertising, interior auto displays, backseat branding, and fleet wraps.',
+    icon: Car,
+    highlight: 'Transit Network'
+  },
+  {
+    title: 'Concept Marketing',
+    desc: 'Experiential on-ground activations, guerrilla marketing setups, pop-ups, and interactive brand installations.',
+    icon: Lightbulb,
+    highlight: 'High Dwell'
   }
 ]
 
-const TECHNICAL_COMPARISON = [
-  { parameter: 'Substrate Density', acrylic: '1.19 g/cm³ Cast PMMA', steel: '8.00 g/cm³ SS304', acp: '1.45 g/cm³ Mineral Core', neon: '1.25 g/cm³ Silicone' },
-  { parameter: 'LED Ingress Protection', acrylic: 'IP67 Waterproof Encapsulated', steel: 'IP67 Halo Gasketed', acp: 'IP65 Linear Integrated', neon: 'IP68 Submersible Grade' },
-  { parameter: 'UV & Weather Degradation', acrylic: '<0.5% Yellowing / 10 Yrs', steel: 'Zero Corrosion / Marine Certified', acp: 'Delta E < 5 / 10 Yrs PVDF', neon: 'UV94-V0 Anti-Discoloration' },
-  { parameter: 'Thermal Operating Range', acrylic: '-30°C to +85°C', steel: '-40°C to +300°C', acp: '-40°C to +90°C', neon: '-25°C to +70°C' },
-  { parameter: 'Factory Turnaround SLA', acrylic: '24–48 Hours', steel: '48–72 Hours', acp: '48 Hours', neon: '24 Hours' }
+const SPECIALIZED_TEAMS = [
+  {
+    name: 'Experimental Ads team',
+    desc: 'Engineers novel outdoor formats, ambient installations, and disruptive high-attention public media.',
+    role: 'Innovation & Impact'
+  },
+  {
+    name: 'Interior designers (Commercial)',
+    desc: 'Specialized in commercial retail spaces, showroom visual merchandising, and branded office environments.',
+    role: 'Spatial Experience'
+  },
+  {
+    name: 'Sales team',
+    desc: 'Dedicated account managers providing rapid scoping, transparent quotes, and continuous project tracking.',
+    role: 'Client Success'
+  },
+  {
+    name: 'Design team',
+    desc: 'Creative directors and visual designers ensuring strict brand fidelity across every substrate.',
+    role: 'Creative Systems'
+  },
+  {
+    name: 'Execution team',
+    desc: 'Production specialists and ground installers delivering flawless physical deployment under 24-hour SLA.',
+    role: 'Ground Operations'
+  }
+]
+
+const SERVICE_PACKAGES = [
+  {
+    name: 'Essential Storefront',
+    desc: 'Complete outdoor signage package for single retail locations and new store openings.',
+    timeline: '24-48 Hours Delivery',
+    deliverables: [
+      'Site measurement & technical survey',
+      'Custom 3D signage design & vectors',
+      'Substrate fabrication & LED module setup',
+      'Professional on-site installation'
+    ]
+  },
+  {
+    name: 'Transit & Auto Fleet',
+    desc: 'Targeted in-vehicle transit branding and auto interior placements across key commercial corridors.',
+    timeline: 'Rapid Campaign Rollout',
+    deliverables: [
+      'Route & demographic corridor mapping',
+      'Weather-resistant high-durability print production',
+      'Fleet installation & tamper checks',
+      'Campaign inspection & reporting'
+    ]
+  },
+  {
+    name: 'Commercial Interior & Merchandising',
+    desc: 'End-to-end commercial interior branding for offices, experience centers, and multi-brand outlets.',
+    timeline: 'Turnkey Execution',
+    deliverables: [
+      'Spatial layout & 3D visualization',
+      'Branded wall claddings & directional signage',
+      'Custom acrylic & metal display units',
+      'Nighttime deployment without business disruption'
+    ]
+  }
 ]
 
 export default function OfflinePage() {
-  const [activeSubstrate, setActiveSubstrate] = useState<typeof SUBSTRATES[0] | null>(null)
+  const [expandedService, setExpandedService] = useState<string | null>(null)
 
   return (
-    <div className="w-full min-h-screen bg-[#070310] text-zinc-100 font-sans selection:bg-purple-600 selection:text-white">
+    <div className="relative w-full min-h-screen bg-background text-foreground font-sans selection:bg-purple-600 selection:text-foreground overflow-x-hidden">
       <Navbar />
 
       {/* =========================================================================
-          1. BRUTALIST HERO: MONOCHROME WITH ULTRA-WIDE TRACKING
+          1. HERO SECTION (24-HOUR DELIVERY TIMELINE)
          ========================================================================= */}
-      <section className="pt-28 sm:pt-36 pb-16 border-b border-purple-900/40">
+      <section className="relative pt-28 sm:pt-36 pb-20 sm:pb-28 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="space-y-6">
+          <div className="space-y-8 max-w-4xl">
             <div className="flex flex-wrap items-center gap-3">
-              <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-purple-950/80 border border-purple-800 text-purple-300">
-                PILLAR 01 // PHYSICAL FABRICATION &amp; STRUCTURAL SIGNAGE
+              <span className="text-[11px] font-mono tracking-widest uppercase px-3 py-1 bg-secondary border border-border text-muted-foreground">
+                OFFLINE EXECUTION &middot; FABRICATION
               </span>
-              <span className="text-[11px] font-mono text-purple-400">
-                PLANT: NOIDA SECTOR 63 &middot; 30,000 SQ.FT
+              <span className="text-[11px] font-mono text-muted-foreground flex items-center gap-1.5 px-3 py-1 bg-secondary/50 border border-border">
+                <Clock className="w-3.5 h-3.5 text-primary" />
+                24-HOUR DELIVERY TIMELINE
               </span>
             </div>
 
-            <h1 className="text-4xl sm:text-7xl lg:text-8xl font-black uppercase tracking-[-0.04em] text-white leading-[0.92]">
-              Brutalist <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-violet-300">
-                Precision
-              </span>{' '}
-              Signage.
+            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-[-0.04em] text-foreground leading-[0.95] uppercase">
+              High-Speed <br />
+              <span className="text-primary">Physical Branding</span> &amp; Fabrication.
             </h1>
 
-            <p className="text-sm sm:text-base md:text-lg text-purple-200/70 max-w-2xl font-light leading-relaxed">
-              Direct factory manufacturing of 3D architectural displays, titanium marine metal channel letters, and high-dwell highway hoardings. Zero middlemen, zero color mismatch.
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl font-light leading-relaxed">
+              Rapid manufacturing, pristine printing, and dedicated on-ground deployment. From high-impact retail signage to transit auto placement with a guaranteed 24-hour delivery timeline.
             </p>
 
-            {/* Quick Action Strip */}
             <div className="flex flex-wrap items-center gap-4 pt-4">
-              <a
-                href="https://wa.me/919876543210?text=Hi%20Busigrow!%20I%20need%20a%20technical%20quote%20for%20signage%20fabrication."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-7 py-4 bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs uppercase tracking-wider transition-colors shadow-lg shadow-purple-900/40"
-              >
-                <MessageSquare className="w-4 h-4" />
-                <span>Instant WhatsApp Blueprint Quote</span>
-              </a>
-
               <Link
                 href="/grow-with-us"
-                className="inline-flex items-center gap-2 px-6 py-4 bg-purple-950/40 hover:bg-purple-900/40 text-purple-300 border border-purple-800 font-medium text-xs uppercase tracking-wider transition-colors"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-950 hover:bg-purple-50 font-bold text-xs uppercase tracking-wider transition-colors shadow-lg shadow-purple-950/40"
               >
-                <span>Schedule Plant Inspection</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>Book Offline Project</span>
+                <ArrowRight className="w-4 h-4 text-purple-950" />
               </Link>
             </div>
           </div>
@@ -152,101 +179,106 @@ export default function OfflinePage() {
       </section>
 
       {/* =========================================================================
-          2. MASONRY GALLERY: B&W DEFAULT TO COLOR HOVER WITH SPECS
+          2. SERVICES LIST
          ========================================================================= */}
-      <section className="py-16 sm:py-24 border-b border-purple-900/40">
+      <section className="py-20 sm:py-28 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-            <div className="space-y-1">
-              <span className="text-[11px] font-mono text-purple-400 uppercase tracking-widest">
-                // SUBSTRATE CATALOG
-              </span>
-              <h2 className="text-3xl sm:text-5xl font-light uppercase tracking-tight text-white">
-                Engineered Substrates
-              </h2>
-            </div>
-            <p className="text-xs font-mono text-purple-300/80 max-w-sm">
-              Hover on physical units to engage optical color grading and inspect engineering specifications.
-            </p>
+          <div className="space-y-1">
+            <span className="text-[11px] font-mono text-primary uppercase tracking-widest">
+              // CORE SERVICES
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-foreground">
+              Offline Capabilities
+            </h2>
           </div>
 
-          {/* Asymmetrical 2x2 Masonry Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {SUBSTRATES.map((sub) => (
-              <div
-                key={sub.id}
-                className="border border-purple-900/50 bg-[#0c0618] overflow-hidden group hover:border-purple-500 transition-all duration-500 flex flex-col justify-between"
-              >
-                {/* Image Container with Monochrome-to-Color Filter */}
-                <div className="relative w-full h-72 sm:h-80 overflow-hidden bg-purple-950/40">
-                  <img
-                    src={sub.image}
-                    alt={sub.title}
-                    className="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                  />
-                  <div className="absolute top-4 left-4 bg-black/80 px-3 py-1 text-[10px] font-mono text-purple-300 border border-purple-900/60 uppercase">
-                    {sub.rate}
+          <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 md:gap-6">
+            {SERVICES.map((s) => {
+              const Icon = s.icon
+              const isExpanded = expandedService === s.title
+
+              return (
+                <div
+                  key={s.title}
+                  onClick={() => setExpandedService(isExpanded ? null : s.title)}
+                  className={`border border-border bg-card hover:border-primary transition-colors flex flex-col cursor-pointer md:cursor-default ${
+                    isExpanded 
+                      ? 'col-span-3 md:col-span-1 p-6 md:p-8 justify-between' 
+                      : 'col-span-1 md:col-span-1 p-4 md:p-8 aspect-square md:aspect-auto justify-center md:justify-between items-center md:items-stretch'
+                  }`}
+                >
+                  <div className={`space-y-4 md:space-y-6 w-full ${!isExpanded ? 'flex flex-col items-center justify-center h-full md:block md:h-auto' : ''}`}>
+                    <div className={`flex w-full ${isExpanded ? 'justify-between items-start md:items-center' : 'justify-center md:justify-between items-center'}`}>
+                      <div className="p-3 bg-secondary border border-border text-foreground inline-flex items-center justify-center">
+                        <Icon className="w-6 h-6 md:w-5 md:h-5" />
+                      </div>
+                      <span className={`text-[10px] font-mono px-2 py-0.5 bg-secondary border border-border text-muted-foreground uppercase md:block ${isExpanded ? 'block' : 'hidden'}`}>
+                        {s.highlight}
+                      </span>
+                    </div>
+
+                    {/* Desktop Content & Expanded Mobile Content */}
+                    <div className={`md:block space-y-4 ${isExpanded ? 'block' : 'hidden'}`}>
+                      <h3 className="text-xl font-bold uppercase text-foreground">
+                        {s.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+                        {s.desc}
+                      </p>
+                    </div>
                   </div>
-                  <div className="absolute top-4 right-4 bg-purple-900/80 px-3 py-1 text-[10px] font-mono text-white uppercase tracking-wider">
-                    {sub.specs.dispatch}
+
+                  <div className={`md:block pt-4 border-t border-border mt-6 ${isExpanded ? 'block' : 'hidden'}`}>
+                    <Link
+                      href="/grow-with-us"
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex items-center gap-1 text-xs font-semibold uppercase text-muted-foreground hover:text-foreground"
+                    >
+                      <span>Inquire service</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
                   </div>
                 </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
 
-                {/* Substrate Metadata Content */}
-                <div className="p-6 sm:p-8 space-y-6">
-                  <div>
-                    <h3 className="text-2xl font-semibold uppercase text-white tracking-tight group-hover:text-purple-300 transition-colors">
-                      {sub.title}
-                    </h3>
-                    <p className="text-xs font-mono text-purple-400 mt-1 uppercase">
-                      {sub.tagline}
-                    </p>
+      {/* =========================================================================
+          3. SPECIALIZED TEAMS
+         ========================================================================= */}
+      <section className="py-20 sm:py-28 border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
+          <div className="space-y-1">
+            <span className="text-[11px] font-mono text-primary uppercase tracking-widest">
+              // SPECIALIZED WORKFORCE
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-foreground">
+              Our In-House Teams
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {SPECIALIZED_TEAMS.map((team) => (
+              <div
+                key={team.name}
+                className="p-8 border border-border bg-card space-y-4 hover:border-primary transition-colors flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="text-[10px] font-mono text-primary uppercase tracking-wider">
+                    {team.role}
                   </div>
-
-                  <p className="text-xs text-purple-200/70 font-light leading-relaxed">
-                    {sub.blueprint}
+                  <h3 className="text-xl font-bold uppercase text-foreground">
+                    {team.name}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+                    {team.desc}
                   </p>
+                </div>
 
-                  {/* Micro Tech-Spec Blueprint Table */}
-                  <div className="grid grid-cols-2 gap-3 p-4 bg-purple-950/20 border border-purple-900/40 text-[11px] font-mono text-purple-200">
-                    <div>
-                      <span className="text-[9px] text-purple-400 uppercase block font-semibold">DIODE ILLUMINATION</span>
-                      <span className="text-white truncate block">{sub.specs.diode.split(' ')[0]}</span>
-                    </div>
-                    <div>
-                      <span className="text-[9px] text-purple-400 uppercase block font-semibold">MAX LUX CALIBRATION</span>
-                      <span className="text-white truncate block">{sub.specs.lux.split(' ')[0]} LUX</span>
-                    </div>
-                    <div>
-                      <span className="text-[9px] text-purple-400 uppercase block font-semibold">STRUCTURAL INTEGRITY</span>
-                      <span className="text-white truncate block">{sub.specs.tensile.split(' ')[0]}</span>
-                    </div>
-                    <div>
-                      <span className="text-[9px] text-purple-400 uppercase block font-semibold">FACTORY WARRANTY</span>
-                      <span className="text-emerald-400 font-semibold">{sub.specs.warranty}</span>
-                    </div>
-                  </div>
-
-                  {/* Action Row */}
-                  <div className="flex items-center justify-between pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setActiveSubstrate(sub)}
-                      className="text-xs font-mono text-purple-300 hover:text-white uppercase tracking-wider inline-flex items-center gap-1.5"
-                    >
-                      <Sliders className="w-3.5 h-3.5" />
-                      <span>Full Technical Blueprint</span>
-                    </button>
-
-                    <a
-                      href={`https://wa.me/919876543210?text=Hi%20Busigrow!%20Quote%20me%20for%20${encodeURIComponent(sub.title)}.`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs font-mono px-4 py-2 bg-purple-900/60 hover:bg-purple-600 text-white uppercase tracking-wider transition-colors border border-purple-700"
-                    >
-                      <span>Direct Quote &rarr;</span>
-                    </a>
-                  </div>
+                <div className="pt-4 border-t border-border text-[10px] font-mono text-primary uppercase">
+                  Active Deployment Ready
                 </div>
               </div>
             ))}
@@ -255,135 +287,95 @@ export default function OfflinePage() {
       </section>
 
       {/* =========================================================================
-          3. MONOSPACED TECHNICAL SPECIFICATION BLUEPRINT TABLE
+          4. SERVICE PACKAGES SECTION (WITH CTA TO BOOK)
          ========================================================================= */}
-      <section className="py-16 sm:py-24 border-b border-purple-900/40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-10">
+      <section className="py-20 sm:py-28 border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
           <div className="space-y-1">
-            <span className="text-[11px] font-mono text-purple-400 uppercase tracking-widest">
-              // LABORATORY TESTING BENCHMARK
+            <span className="text-[11px] font-mono text-primary uppercase tracking-widest">
+              // TURNKEY SOLUTIONS
             </span>
-            <h2 className="text-3xl sm:text-5xl font-light uppercase tracking-tight text-white">
-              Comparative Engineering Matrix
+            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-foreground">
+              Service Packages
             </h2>
           </div>
 
-          <div className="overflow-x-auto border border-purple-900/50 bg-[#0a0414]">
-            <table className="w-full text-left font-mono text-xs text-zinc-300">
-              <thead className="bg-[#120724] border-b border-purple-900/50 text-purple-300 uppercase tracking-wider text-[11px]">
-                <tr>
-                  <th className="p-4 sm:p-5 border-r border-purple-900/40">ENGINEERING PARAMETER</th>
-                  <th className="p-4 sm:p-5 border-r border-purple-900/40">3D CAST ACRYLIC</th>
-                  <th className="p-4 sm:p-5 border-r border-purple-900/40">SS304 TITANIUM</th>
-                  <th className="p-4 sm:p-5 border-r border-purple-900/40">PVDF HEAVY ACP</th>
-                  <th className="p-4 sm:p-5">IP68 SILICONE NEON</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-purple-900/30 text-[11px]">
-                {TECHNICAL_COMPARISON.map((row, idx) => (
-                  <tr key={idx} className="hover:bg-purple-950/20 transition-colors">
-                    <td className="p-4 sm:p-5 font-semibold text-purple-200 border-r border-purple-900/40 uppercase">
-                      {row.parameter}
-                    </td>
-                    <td className="p-4 sm:p-5 border-r border-purple-900/40 text-zinc-300">
-                      {row.acrylic}
-                    </td>
-                    <td className="p-4 sm:p-5 border-r border-purple-900/40 text-purple-300">
-                      {row.steel}
-                    </td>
-                    <td className="p-4 sm:p-5 border-r border-purple-900/40 text-zinc-300">
-                      {row.acp}
-                    </td>
-                    <td className="p-4 sm:p-5 text-emerald-400">
-                      {row.neon}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {SERVICE_PACKAGES.map((pkg) => (
+              <div
+                key={pkg.name}
+                className="p-8 border border-border bg-card space-y-6 hover:border-primary transition-colors flex flex-col justify-between"
+              >
+                <div className="space-y-4">
+                  <span className="text-[10px] font-mono px-2.5 py-1 bg-secondary border border-border text-muted-foreground uppercase tracking-wider inline-block">
+                    {pkg.timeline}
+                  </span>
+
+                  <h3 className="text-2xl font-bold uppercase text-foreground">
+                    {pkg.name}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+                    {pkg.desc}
+                  </p>
+
+                  <div className="pt-4 space-y-2 border-t border-border">
+                    <span className="text-[10px] font-mono text-primary uppercase tracking-wider block mb-2">
+                      Included Scope:
+                    </span>
+                    {pkg.deliverables.map((item) => (
+                      <div key={item} className="flex items-start gap-2 text-xs text-muted-foreground font-light">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-6 border-t border-border">
+                  <Link
+                    href="/grow-with-us"
+                    className="w-full py-3 bg-white hover:bg-purple-50 text-purple-950 font-bold text-xs uppercase tracking-wider text-center block transition-colors"
+                  >
+                    Book This Package &rarr;
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* =========================================================================
-          4. MODAL DRAWER: INTERACTIVE SUBSTRATE SPECIFICATION
+          5. FINAL CTA
          ========================================================================= */}
-      <AnimatePresence>
-        {activeSubstrate && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#0e061c] border border-purple-700 max-w-xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative font-mono text-xs"
-            >
-              <button
-                type="button"
-                onClick={() => setActiveSubstrate(null)}
-                className="absolute top-5 right-5 p-2 text-purple-400 hover:text-white"
+      <section className="py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="p-10 sm:p-16 border border-border bg-gradient-to-br from-primary/20 via-primary/10 to-background text-foreground flex flex-col md:flex-row items-start md:items-center justify-between gap-8 shadow-2xl">
+            <div className="space-y-3 max-w-xl">
+              <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-secondary border border-border text-muted-foreground">
+                PHYSICAL IMPACT
+              </span>
+              <h3 className="text-3xl sm:text-5xl font-black uppercase tracking-tight leading-tight">
+                Make your brand Impossible to miss.
+              </h3>
+              <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+                Connect directly with our execution and design teams to launch your on-ground signage or campaign within 24 hours.
+              </p>
+            </div>
+
+            <div>
+              <Link
+                href="/grow-with-us"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-purple-950 hover:bg-purple-50 font-bold text-xs uppercase tracking-wider transition-colors shadow-xl"
               >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="space-y-1 border-b border-purple-900/60 pb-4">
-                <span className="text-[10px] text-purple-400 uppercase tracking-widest">
-                  TECHNICAL BLUEPRINT // NOIDA SEC 63
-                </span>
-                <h3 className="text-2xl font-bold uppercase text-white font-sans">
-                  {activeSubstrate.title}
-                </h3>
-                <p className="text-purple-300 text-[11px]">{activeSubstrate.tagline}</p>
-              </div>
-
-              <div className="space-y-3">
-                <div className="text-[10px] uppercase tracking-wider text-purple-400">
-                  Full Laboratory Specifications:
-                </div>
-                <div className="space-y-2 text-zinc-300">
-                  <div className="flex justify-between py-1 border-b border-purple-950">
-                    <span className="text-zinc-500">Diode Rating:</span>
-                    <span className="text-purple-200">{activeSubstrate.specs.diode}</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-purple-950">
-                    <span className="text-zinc-500">Lux Output:</span>
-                    <span className="text-purple-200">{activeSubstrate.specs.lux}</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-purple-950">
-                    <span className="text-zinc-500">Tensile / Core:</span>
-                    <span className="text-purple-200">{activeSubstrate.specs.tensile}</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-purple-950">
-                    <span className="text-zinc-500">Wind-Load Resistance:</span>
-                    <span className="text-purple-200">{activeSubstrate.specs.windLoad}</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-purple-950">
-                    <span className="text-zinc-500">Manufacturing SLA:</span>
-                    <span className="text-emerald-400 font-semibold">{activeSubstrate.specs.dispatch}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 flex gap-4">
-                <a
-                  href={`https://wa.me/919876543210?text=Hi%20Busigrow!%20I%20want%20to%20order%20${encodeURIComponent(activeSubstrate.title)}.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 py-3 bg-purple-600 hover:bg-purple-500 text-white font-sans text-center uppercase font-medium text-xs transition-colors"
-                >
-                  Order via WhatsApp Desk
-                </a>
-                <button
-                  type="button"
-                  onClick={() => setActiveSubstrate(null)}
-                  className="px-5 py-3 border border-purple-800 text-purple-300 hover:bg-purple-950/60 uppercase text-xs transition-colors"
-                >
-                  Close
-                </button>
-              </div>
-            </motion.div>
+                <span>Let&apos;s grow</span>
+                <ArrowRight className="w-4 h-4 text-purple-950" />
+              </Link>
+            </div>
           </div>
-        )}
-      </AnimatePresence>
+        </div>
+      </section>
 
       <FooterSection />
     </div>
