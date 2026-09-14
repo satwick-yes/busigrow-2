@@ -1,0 +1,206 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Strictly White, Purple & Violet Palette */
+  --background: #FFFFFF;
+  --foreground: #0A041D;
+  --card: #FFFFFF;
+  --card-foreground: #0A041D;
+  --popover: #FFFFFF;
+  --popover-foreground: #0A041D;
+
+  --primary: #7C3AED;           /* Vibrant Violet */
+  --primary-foreground: #FFFFFF;
+  --primary-glow: rgba(124, 58, 237, 0.35);
+
+  --secondary: #F8F5FF;         /* Soft Lavender-White Tint */
+  --secondary-foreground: #4C1D95;
+
+  --muted: #F3EEFF;
+  --muted-foreground: #6B5E87;
+
+  --accent: #8B5CF6;            /* Electric Purple */
+  --accent-foreground: #FFFFFF;
+
+  --destructive: #E11D48;
+  --destructive-foreground: #FFFFFF;
+
+  --border: #E8DDFF;            /* Refined Violet Border */
+  --input: #E8DDFF;
+  --ring: #8B5CF6;
+  --radius: 1rem;
+
+  --violet-glow: 0 0 25px rgba(139, 92, 246, 0.25);
+  --purple-gradient: linear-gradient(135deg, #7C3AED 0%, #9333EA 50%, #C084FC 100%);
+
+  --font-sans: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.dark {
+  --background: #070314;        /* Deep Cosmic Violet-Black */
+  --foreground: #F6F3FF;
+  --card: #0E0722;              /* Dark Luminous Violet Surface */
+  --card-foreground: #F6F3FF;
+  --popover: #0E0722;
+  --popover-foreground: #F6F3FF;
+
+  --primary: #A78BFA;           /* Bright Violet for Dark Mode */
+  --primary-foreground: #070314;
+  --primary-glow: rgba(167, 139, 250, 0.45);
+
+  --secondary: #170C34;         /* Deep Violet Accent */
+  --secondary-foreground: #DDD6FE;
+
+  --muted: #1A0D3D;
+  --muted-foreground: #A193BC;
+
+  --accent: #C084FC;            /* Luminous Lavender Accent */
+  --accent-foreground: #070314;
+
+  --destructive: #991B1B;
+  --destructive-foreground: #F6F3FF;
+
+  --border: #281657;            /* Neon Violet Border */
+  --input: #281657;
+  --ring: #A78BFA;
+
+  --violet-glow: 0 0 35px rgba(167, 139, 250, 0.35);
+  --purple-gradient: linear-gradient(135deg, #8B5CF6 0%, #A855F7 50%, #E9D5FF 100%);
+}
+
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased font-light selection:bg-purple-600 selection:text-white;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+    letter-spacing: -0.015em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.035em;
+  }
+}
+
+/* Custom Human-Crafted Keyframes & Physics */
+@keyframes ambient-drift {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -20px) scale(1.08);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+}
+
+@keyframes beam-flow {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes laser-scan {
+  0% {
+    transform: translateY(0%);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(100%);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 0.8;
+  }
+}
+
+@keyframes border-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-ambient-drift {
+  animation: ambient-drift 18s ease-in-out infinite;
+}
+
+.animate-laser-scan {
+  animation: laser-scan 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.border-shimmer-active {
+  background: linear-gradient(90deg, rgba(139,92,246,0.2) 0%, rgba(168,85,247,0.7) 50%, rgba(139,92,246,0.2) 100%);
+  background-size: 200% 200%;
+  animation: border-shimmer 4s ease infinite;
+}
+
+/* Glassmorphism & Refined Glowing Elements */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 92, 246, 0.18);
+}
+
+.dark .glass-panel {
+  background: rgba(14, 7, 34, 0.75);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(167, 139, 250, 0.18);
+}
+
+.text-gradient-purple {
+  background: linear-gradient(135deg, #7C3AED 0%, #9333EA 50%, #C084FC 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .text-gradient-purple {
+  background: linear-gradient(135deg, #DDD6FE 0%, #C084FC 50%, #A855F7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

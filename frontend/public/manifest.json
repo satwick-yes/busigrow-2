@@ -1,0 +1,15 @@
+{
+  "short_name": "Busigrow",
+  "name": "Busigrow",
+  "icons": [
+    {
+      "src": "/assets/images/Busigrow_Registered-1751003166599.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(git clone https://github.com/pbakaus/impeccable.git \"$env:USERPROFILE\\\\.claude\\\\skills\\\\impeccable\")"
+    ]
+  }
+}
