@@ -7,12 +7,12 @@ import { Menu, X, ArrowUpRight, Phone, MessageSquare } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 const NAV_LINKS = [
-  { label: "Offline", href: "/offline" },
+  { label: "Home", href: "/" },
   { label: "Online", href: "/online" },
-  { label: "Automation", href: "/automations" },
-  { label: "Campaigns", href: "/campaigns" },
-  { label: "BizMag", href: "/busimag" },
-  { label: "About", href: "/about" },
+  { label: "Offline", href: "/offline" },
+  { label: "Ready made", href: "/campaigns" },
+  { label: "Automations", href: "/automations" },
+  { label: "Busimag", href: "/busimag" },
 ]
 
 export function Navbar() {
@@ -75,9 +75,9 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           <Link
             href="/grow-with-us"
-            className="hidden lg:inline-flex items-center gap-1.5 text-xs font-medium px-4 py-2 bg-black text-white dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors rounded-sm"
+            className="hidden lg:inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2 bg-black text-white dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors uppercase tracking-wider rounded-none"
           >
-            <span>Grow with us</span>
+            <span>Let&apos;s grow</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
 
@@ -112,7 +112,7 @@ export function Navbar() {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`text-sm font-medium transition-colors ${
                       active
-                        ? "text-black dark:text-white"
+                        ? "text-black dark:text-white font-semibold"
                         : "text-zinc-500 dark:text-zinc-400"
                     }`}
                   >
@@ -126,9 +126,9 @@ export function Navbar() {
               <Link
                 href="/grow-with-us"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-3 bg-black text-white dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 text-sm font-medium rounded-sm"
+                className="w-full text-center py-3 bg-black text-white dark:bg-white dark:text-black hover:bg-zinc-800 dark:hover:bg-zinc-200 text-sm font-semibold uppercase tracking-wider rounded-none"
               >
-                Grow with us
+                Let&apos;s grow &rarr;
               </Link>
             </div>
           </motion.div>

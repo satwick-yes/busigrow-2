@@ -1,322 +1,428 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 import { Navbar } from '@/components/navbar'
 import FooterSection from '@/components/footer-section'
-import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import { Hero3DScene } from '@/components/hero-3d-scene'
+import { TerminalEstimator } from '@/components/terminal-estimator'
+import { InteractiveFabricationLab } from '@/components/interactive-fabrication-lab'
+import { LiveWorkflowPipeline } from '@/components/live-workflow-pipeline'
+import { InteractiveComparisonSlider } from '@/components/interactive-comparison-slider'
+import {
+  ArrowRight,
+  Hammer,
+  Code2,
+  Zap,
+  MessageSquare
+} from 'lucide-react'
 
-const FABRICATION_SPECS = [
-  {
-    title: '3D Cast Acrylic Letters',
-    bestFor: 'Retail Stores & Malls',
-    lighting: 'Samsung IP67 Frontlit LED',
-    thickness: '35mm – 50mm Depth',
-    warranty: '5-Year Outdoor Warranty',
-    description: 'High-density cast acrylic with CNC laser-polished edges for vibrant day & night storefront illumination.',
-    finish: 'CNC Laser Polished Edge',
-  },
-  {
-    title: 'Titanium & SS304 Metal Letters',
-    bestFor: 'Corporate HQs & Tech Parks',
-    lighting: 'Warm 3000K Halo Backlit',
-    thickness: '25mm – 40mm Depth',
-    warranty: '10-Year Marine Grade',
-    description: 'Corrosion-proof 304 surgical grade stainless steel with micro-welded returns and architectural backlighting.',
-    finish: '304 Satin Hairline Polish',
-  },
-  {
-    title: 'Architectural ACP Facades',
-    bestFor: 'Commercial Buildings & Showrooms',
-    lighting: 'Integrated Linear Profile LED',
-    thickness: '3mm / 4mm Heavy Panel',
-    warranty: '7-Year Weatherproof',
-    description: 'Fire-retardant aluminium composite panels with CNC V-grooving and weather-sealed structural mounting.',
-    finish: 'PVDF Coated Aluminium',
-  },
-  {
-    title: 'High-Lumen Outdoor Pylons',
-    bestFor: 'Highways & Industrial Parks',
-    lighting: 'High-Intensity Optical Modules',
-    thickness: '100mm Extruded Frame',
-    warranty: '5-Year All-Weather',
-    description: 'Heavy structural steel framing engineered to withstand wind loads up to 150 km/h with 1200 DPI UV print face.',
-    finish: 'Dual-Strike UV Polycarbonate',
-  },
-]
+const FADE_UP = {
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
+}
 
-const CASE_STUDIES = [
-  {
-    client: 'QSR Franchise Expansion',
-    location: 'Delhi NCR (50 Locations)',
-    scope: '3D Cast Acrylic Signage, ACP Facades & Storefront Glazing',
-    timeline: '6 Weeks Total Execution',
-    metrics: [
-      { label: 'Footfall Growth', value: '+45%' },
-      { label: 'Locations Delivered', value: '50 Stores' },
-      { label: 'Installation SLA', value: '100% On-Time' },
-    ],
-    highlight: 'Fabricated and installed identical brand signage across 50 mall and high-street locations with zero defect claims.',
-  },
-  {
-    client: 'D2C Apparel & Lifestyle Brand',
-    location: 'Gurugram & Online',
-    scope: 'Sub-Second Next.js E-Commerce + WhatsApp Lead Bot',
-    timeline: '3 Weeks from Design to Launch',
-    metrics: [
-      { label: 'Edge TTFB', value: '18ms' },
-      { label: 'ROAS Lift', value: '3.8x' },
-      { label: 'Lighthouse Score', value: '100/100' },
-    ],
-    highlight: 'Replaced a slow legacy storefront with custom Next.js architecture and automated WhatsApp checkout recovery.',
-  },
-  {
-    client: 'Multi-Speciality Healthcare Center',
-    location: 'Noida Sector 62 & South Delhi',
-    scope: 'SS304 Titanium Signage + Turnkey Patient Booking Engine',
-    timeline: '4 Weeks End-to-End',
-    metrics: [
-      { label: 'Patient Inquiries', value: '3.2x' },
-      { label: 'WhatsApp Response', value: '1.8s' },
-      { label: 'Outdoor Durability', value: '10-Yr Marine' },
-    ],
-    highlight: 'Engineered hospital-grade backlit titanium signage paired with an automated WhatsApp doctor appointment pipeline.',
-  },
-]
-
-export default function HomePage() {
-  const [signageSqFt, setSignageSqFt] = useState<number>(120)
-  const [materialType, setMaterialType] = useState<'acrylic' | 'titanium' | 'acp' | 'neon'>('acrylic')
-  const [includeWebPlatform, setIncludeWebPlatform] = useState<boolean>(true)
-  const [includeWhatsAppCRM, setIncludeWhatsAppCRM] = useState<boolean>(true)
-
-  const getMaterialRate = () => {
-    switch (materialType) {
-      case 'acrylic': return 450
-      case 'titanium': return 720
-      case 'acp': return 380
-      case 'neon': return 350
-      default: return 450
+const STAGGER_CONTAINER = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1
     }
   }
+}
 
-  const calculateEstimate = () => {
-    const signCost = signageSqFt * getMaterialRate()
-    const webCost = includeWebPlatform ? 45000 : 0
-    const crmCost = includeWhatsAppCRM ? 25000 : 0
-    const totalMin = Math.round((signCost + webCost + crmCost) * 0.95)
-    const totalMax = Math.round((signCost + webCost + crmCost) * 1.15)
-    const sla = signageSqFt > 300 ? '48-72 Hours' : '24-48 Hours'
-    return { signCost, totalMin, totalMax, sla }
-  }
-
-  const estimate = calculateEstimate()
-
+export default function HomePage() {
   return (
-    <div className="relative w-full min-h-screen bg-white dark:bg-black text-black dark:text-white font-sans">
+    <div className="relative w-full min-h-screen bg-[#070310] text-zinc-100 font-sans selection:bg-purple-600 selection:text-white overflow-x-hidden">
       <Navbar />
 
-      <main className="pt-32 pb-24 space-y-32 max-w-7xl mx-auto px-4 sm:px-6">
-        {/* HERO SECTION */}
-        <section className="pt-8 pb-16 border-b border-zinc-200 dark:border-zinc-800">
-          <div className="max-w-4xl space-y-8">
-            <div className="text-xs font-mono text-zinc-500 uppercase tracking-widest">
-              [Integrated Growth Infrastructure / Est. 2024]
+      {/* =========================================================================
+          1. HERO SECTION: 3D THREE.JS CANVAS + OVERSIZED DISPLAY TYPOGRAPHY
+         ========================================================================= */}
+      <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-24 border-b border-purple-900/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left 7 Columns: Extreme Typography & Metadata */}
+            <motion.div
+              initial="initial"
+              animate="animate"
+              variants={STAGGER_CONTAINER}
+              className="lg:col-span-7 space-y-8 z-10"
+            >
+              {/* Monospace Plant Metadata Banner */}
+              <motion.div variants={FADE_UP} className="inline-flex items-center gap-3">
+                <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-purple-950/80 border border-purple-800/80 text-purple-300">
+                  NOIDA SECTOR 63 &middot; DIRECT PLANT
+                </span>
+                <span className="text-[11px] font-mono text-purple-400 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  CAPACITY: ACTIVE SLA
+                </span>
+              </motion.div>
+
+              {/* Massive Tightly-Tracked Display Header */}
+              <motion.h1
+                variants={FADE_UP}
+                className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-[-0.04em] text-white leading-[0.92] uppercase"
+              >
+                Physical <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-violet-300">
+                  Signage
+                </span>{' '}
+                &amp; <br />
+                Digital <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-purple-300 to-fuchsia-300">
+                  Engineering.
+                </span>
+              </motion.h1>
+
+              {/* Crisp Asymmetrical Subtext */}
+              <motion.p
+                variants={FADE_UP}
+                className="text-sm sm:text-base md:text-lg text-purple-200/70 max-w-xl font-light leading-relaxed tracking-tight"
+              >
+                Zero fragmented vendors. We fuse 30,000 sq.ft of industrial CNC signage fabrication with sub-second Next.js web platforms and automated WhatsApp CRM pipelines. Single-source delivery across Delhi NCR.
+              </motion.p>
+
+              {/* Action Buttons */}
+              <motion.div variants={FADE_UP} className="flex flex-wrap items-center gap-4 pt-2">
+                <Link
+                  href="/grow-with-us"
+                  className="inline-flex items-center gap-2.5 px-7 py-4 bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs uppercase tracking-wider transition-all shadow-xl shadow-purple-900/50"
+                >
+                  <span>grow with us</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+
+                <a
+                  href="https://wa.me/919876543210?text=Hi%20Busigrow!%20I%20want%20to%20schedule%20a%20Noida%20plant%20audit."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-4 bg-purple-950/60 hover:bg-purple-900/60 text-purple-200 border border-purple-800/80 font-medium text-xs uppercase tracking-wider transition-colors"
+                >
+                  <MessageSquare className="w-4 h-4 text-purple-400" />
+                  <span>WhatsApp Plant</span>
+                </a>
+              </motion.div>
+
+              {/* Telemetry Micro-Data Row */}
+              <motion.div
+                variants={FADE_UP}
+                className="grid grid-cols-3 gap-4 pt-6 border-t border-purple-900/40 text-left font-mono"
+              >
+                <div>
+                  <div className="text-xl sm:text-2xl font-bold text-white">30,000</div>
+                  <div className="text-[10px] text-purple-400 uppercase tracking-wider">SQ.FT NOIDA PLANT</div>
+                </div>
+                <div>
+                  <div className="text-xl sm:text-2xl font-bold text-purple-300">24-48H</div>
+                  <div className="text-[10px] text-purple-400 uppercase tracking-wider">NCR DISPATCH SLA</div>
+                </div>
+                <div>
+                  <div className="text-xl sm:text-2xl font-bold text-emerald-400">18MS</div>
+                  <div className="text-[10px] text-purple-400 uppercase tracking-wider">EDGE WEB TTFB</div>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Right 5 Columns: Interactive Three.js 3D Volumetric Scene */}
+            <div className="lg:col-span-5 relative w-full h-[400px] lg:h-[580px] border border-purple-900/50 bg-[#0c051a]/80 backdrop-blur-md overflow-hidden">
+              <div className="absolute top-4 left-4 z-10 text-[10px] font-mono text-purple-400 uppercase tracking-widest flex items-center gap-2">
+                <span className="w-2 h-2 bg-purple-500 rounded-full animate-ping" />
+                <span>INTERACTIVE 3D SUBSTRATE RAYCAST</span>
+              </div>
+              <Hero3DScene />
+              <div className="absolute bottom-4 right-4 z-10 text-[9px] font-mono text-purple-400/70 bg-black/60 px-2.5 py-1 border border-purple-900/40">
+                DRAG TO ROTATE 3D MATRIX
+              </div>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tighter text-black dark:text-white leading-[1.1]">
-              Physical signage, custom web platforms, and automated leads — built and delivered by one team.
-            </h1>
-
-            <p className="text-lg sm:text-xl text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl font-light">
-              Bridging physical architectural presence with custom web platforms and automated customer acquisition pipelines under a unified standard. No middlemen. No disjointed branding.
+      {/* =========================================================================
+          2. ASYMMETRICAL 1PX BORDER CAPABILITIES GRID
+         ========================================================================= */}
+      <section className="border-b border-purple-900/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 space-y-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="space-y-2">
+              <span className="text-[11px] font-mono tracking-widest text-purple-400 uppercase">
+                // SYSTEM ARCHITECTURE
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-white uppercase">
+                The Integrated Execution Stack
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-purple-300/70 max-w-md font-light">
+              One unified team owning your physical storefront fabrication, high-speed digital infrastructure, and direct WhatsApp sales workflows.
             </p>
+          </div>
 
-            <div className="flex flex-wrap items-center gap-4 pt-4">
-              <Link
-                href="/grow-with-us"
-                className="inline-flex items-center justify-center px-8 py-4 bg-black text-white dark:bg-white dark:text-black font-medium transition-colors hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-sm text-sm"
-              >
-                Start a Brief
-              </Link>
-              <Link
-                href="/busimag"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-zinc-100 text-black dark:bg-zinc-900 dark:text-white font-medium transition-colors hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-sm text-sm"
-              >
-                View Work <ArrowRight className="w-4 h-4" />
-              </Link>
+          {/* Hairline 1px Structural Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-purple-900/40 border border-purple-900/40 bg-[#0a0414]">
+            {/* 1. Offline Signage */}
+            <div className="p-8 sm:p-10 space-y-6 hover:bg-purple-950/20 transition-colors">
+              <div className="flex items-center justify-between text-purple-400 font-mono text-xs">
+                <span>01 / FABRICATION</span>
+                <Hammer className="w-4 h-4 text-purple-400" />
+              </div>
+              <h3 className="text-2xl font-light text-white tracking-tight uppercase">
+                Offline Signage &amp; Facades
+              </h3>
+              <p className="text-xs text-purple-200/70 leading-relaxed font-light">
+                Direct manufacturing of 3D Cast Acrylic, SS304 Titanium, Heavy ACP Facades, and IP68 Neon in our Noida plant with Samsung IP67 illumination.
+              </p>
+              <div className="pt-4 border-t border-purple-900/40">
+                <Link
+                  href="/offline"
+                  className="inline-flex items-center gap-1.5 text-xs font-mono text-purple-300 hover:text-white uppercase tracking-wider"
+                >
+                  <span>Explore Offline Signage</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* 2. Online Digital Engineering */}
+            <div className="p-8 sm:p-10 space-y-6 hover:bg-purple-950/20 transition-colors">
+              <div className="flex items-center justify-between text-purple-400 font-mono text-xs">
+                <span>02 / WEB PLATFORMS</span>
+                <Code2 className="w-4 h-4 text-purple-400" />
+              </div>
+              <h3 className="text-2xl font-light text-white tracking-tight uppercase">
+                Next.js Web Applications
+              </h3>
+              <p className="text-xs text-purple-200/70 leading-relaxed font-light">
+                Sub-second edge storefronts and custom platforms. 18ms TTFB, 100/100 Lighthouse performance, headless architecture, and instant scalability.
+              </p>
+              <div className="pt-4 border-t border-purple-900/40">
+                <Link
+                  href="/online"
+                  className="inline-flex items-center gap-1.5 text-xs font-mono text-purple-300 hover:text-white uppercase tracking-wider"
+                >
+                  <span>Explore Online Engineering</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* 3. WhatsApp Automations */}
+            <div className="p-8 sm:p-10 space-y-6 hover:bg-purple-950/20 transition-colors">
+              <div className="flex items-center justify-between text-purple-400 font-mono text-xs">
+                <span>03 / PIPELINES</span>
+                <Zap className="w-4 h-4 text-purple-400" />
+              </div>
+              <h3 className="text-2xl font-light text-white tracking-tight uppercase">
+                WhatsApp CRM Automations
+              </h3>
+              <p className="text-xs text-purple-200/70 leading-relaxed font-light">
+                Sub-5-second lead qualification, dynamic PDF quote generation, and automated WhatsApp CRM deal pipelines that close deals while you sleep.
+              </p>
+              <div className="pt-4 border-t border-purple-900/40">
+                <Link
+                  href="/automations"
+                  className="inline-flex items-center gap-1.5 text-xs font-mono text-purple-300 hover:text-white uppercase tracking-wider"
+                >
+                  <span>Explore CRM Automations</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* ESTIMATOR SECTION */}
-        <section className="space-y-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-zinc-200 dark:border-zinc-800">
+      {/* =========================================================================
+          3. INTERACTIVE MATERIAL STUDIO (DAY/NIGHT ILLUMINATION LAB)
+         ========================================================================= */}
+      <section className="border-b border-purple-900/40 py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <h2 className="text-3xl font-medium tracking-tight">Cost &amp; Turnaround Estimator</h2>
-              <p className="text-zinc-500 mt-2">Real-time estimations based on Noida manufacturing rates.</p>
+              <span className="text-[11px] font-mono tracking-widest text-purple-400 uppercase">
+                // NOIDA FACTORY SIMULATOR
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-white uppercase mt-1">
+                Material &amp; Illumination Studio
+              </h2>
             </div>
+            <p className="text-xs sm:text-sm text-purple-300/70 max-w-sm font-light">
+              Toggle day/night states to inspect LED halo reflection, Samsung diode lumens, and substrate durability.
+            </p>
           </div>
+          <InteractiveFabricationLab />
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
-            <div className="space-y-10">
-              <div className="space-y-4">
-                <div className="flex justify-between items-end">
-                  <label className="text-sm font-medium">Signage Area (Sq.Ft)</label>
-                  <span className="text-sm font-mono">{signageSqFt}</span>
-                </div>
-                <input
-                  type="range" min="20" max="500" step="10"
-                  value={signageSqFt}
-                  onChange={(e) => setSignageSqFt(Number(e.target.value))}
-                  className="w-full accent-black dark:accent-white"
-                />
-              </div>
-
-              <div className="space-y-4">
-                <label className="text-sm font-medium block">Material Substrate</label>
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { id: 'acrylic', label: '3D Cast Acrylic' },
-                    { id: 'titanium', label: 'SS304 Titanium' },
-                    { id: 'acp', label: 'ACP Heavy Facade' },
-                    { id: 'neon', label: 'Silicone Neon Flex' },
-                  ].map((mat) => (
-                    <button
-                      key={mat.id}
-                      type="button"
-                      onClick={() => setMaterialType(mat.id as any)}
-                      className={`p-4 text-left transition-colors border ${
-                        materialType === mat.id
-                          ? 'border-black dark:border-white bg-black text-white dark:bg-white dark:text-black'
-                          : 'border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-600'
-                      }`}
-                    >
-                      <div className="text-sm font-medium">{mat.label}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <label className="text-sm font-medium block">Digital Infrastructure</label>
-                <div className="space-y-3">
-                  <label className="flex items-center gap-4 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={includeWebPlatform}
-                      onChange={(e) => setIncludeWebPlatform(e.target.checked)}
-                      className="w-4 h-4 accent-black dark:accent-white"
-                    />
-                    <span className="text-sm">Next.js Web Application</span>
-                  </label>
-                  <label className="flex items-center gap-4 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={includeWhatsAppCRM}
-                      onChange={(e) => setIncludeWhatsAppCRM(e.target.checked)}
-                      className="w-4 h-4 accent-black dark:accent-white"
-                    />
-                    <span className="text-sm">WhatsApp Lead CRM Bot</span>
-                  </label>
-                </div>
-              </div>
+      {/* =========================================================================
+          4. LIVE LEAD-TO-QUOTE AUTOMATION PIPELINE (SUB-5-SECOND SIMULATOR)
+         ========================================================================= */}
+      <section className="border-b border-purple-900/40 py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <span className="text-[11px] font-mono tracking-widest text-purple-400 uppercase">
+                // INSTANT SALES PIPELINE
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-white uppercase mt-1">
+                Sub-5-Second Lead-to-Quote Automation
+              </h2>
             </div>
+            <p className="text-xs sm:text-sm text-purple-300/70 max-w-sm font-light">
+              Simulate an inbound customer inquiry flow through AI analysis, dynamic PDF creation, and WhatsApp dispatch.
+            </p>
+          </div>
+          <LiveWorkflowPipeline />
+        </div>
+      </section>
 
-            <div className="bg-zinc-50 dark:bg-zinc-900 p-8 sm:p-12 h-fit border border-zinc-200 dark:border-zinc-800">
-              <span className="text-xs font-mono uppercase tracking-widest text-zinc-500">Estimated Investment</span>
-              <div className="text-4xl sm:text-5xl font-light tracking-tight mt-4 mb-8">
-                ₹{estimate.totalMin.toLocaleString('en-IN')} – ₹{estimate.totalMax.toLocaleString('en-IN')}
-              </div>
-              
-              <div className="space-y-4 text-sm border-t border-zinc-200 dark:border-zinc-800 pt-8">
-                <div className="flex justify-between">
-                  <span className="text-zinc-500">Signage Allocation:</span>
-                  <span className="font-mono">₹{estimate.signCost.toLocaleString('en-IN')}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-zinc-500">Digital Infrastructure:</span>
-                  <span className="font-mono">₹{(includeWebPlatform ? 45000 : 0) + (includeWhatsAppCRM ? 25000 : 0)}</span>
-                </div>
-                <div className="flex justify-between mt-4">
-                  <span className="text-zinc-500">Production SLA:</span>
-                  <span className="font-medium">{estimate.sla}</span>
-                </div>
-              </div>
+      {/* =========================================================================
+          5. TACTILE COMPARISON SLIDER (FRAGMENTED VENDORS VS BUSIGROW)
+         ========================================================================= */}
+      <section className="border-b border-purple-900/40 py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <span className="text-[11px] font-mono tracking-widest text-purple-400 uppercase">
+                // ACCOUNTABILITY COMPARISON
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-white uppercase mt-1">
+                Fragmented Vendors vs. Busigrow
+              </h2>
             </div>
+            <p className="text-xs sm:text-sm text-purple-300/70 max-w-sm font-light">
+              Drag the interactive slider to inspect why unified single-source ownership eliminates delays and color drift.
+            </p>
           </div>
-        </section>
+          <InteractiveComparisonSlider />
+        </div>
+      </section>
 
-        {/* MANUFACTURING STANDARDS */}
-        <section className="space-y-12">
-          <div className="border-b border-zinc-200 dark:border-zinc-800 pb-6">
-            <h2 className="text-3xl font-medium tracking-tight">Manufacturing Standards</h2>
+      {/* =========================================================================
+          6. TERMINAL ESTIMATOR: SLEEK NO-BOX PRICING & TELEMETRY MODULE
+         ========================================================================= */}
+      <section className="border-b border-purple-900/40 py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <span className="text-[11px] font-mono tracking-widest text-purple-400 uppercase">
+                // REAL-TIME PRICING ENGINE
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-white uppercase mt-1">
+                Cost &amp; Turnaround Estimator
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-purple-300/70 max-w-sm font-light">
+              Configure parameters to calculate direct Noida plant rate cards and emergency 24-48h dispatch SLAs.
+            </p>
           </div>
+          <TerminalEstimator />
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-            {FABRICATION_SPECS.map((spec, i) => (
-              <div key={i} className="space-y-4">
-                <div className="text-sm font-mono text-zinc-400">0{i + 1}</div>
-                <h3 className="text-lg font-medium">{spec.title}</h3>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                  {spec.description}
-                </p>
-                <div className="pt-4 border-t border-zinc-100 dark:border-zinc-900 space-y-2 text-xs text-zinc-500">
-                  <div className="flex justify-between"><span>Lighting</span><span className="text-black dark:text-white truncate ml-2">{spec.lighting}</span></div>
-                  <div className="flex justify-between"><span>Finish</span><span className="text-black dark:text-white truncate ml-2">{spec.finish}</span></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* COMMERCIAL DEPLOYMENTS */}
-        <section className="space-y-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-zinc-200 dark:border-zinc-800 pb-6">
-            <h2 className="text-3xl font-medium tracking-tight">Commercial Deployments</h2>
-            <Link href="/busimag" className="text-sm font-medium hover:underline inline-flex items-center gap-1">
-              View Case Studies <ArrowUpRight className="w-4 h-4" />
+      {/* =========================================================================
+          7. RECENT CASE STUDIES & METRICS (CAMPAIGNS PREVIEW)
+         ========================================================================= */}
+      <section className="border-b border-purple-900/40 py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-12">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <span className="text-[11px] font-mono tracking-widest text-purple-400 uppercase">
+                // VERIFIED RESULTS
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-white uppercase mt-1">
+                Proven Turnkey Ventures
+              </h2>
+            </div>
+            <Link
+              href="/campaigns"
+              className="inline-flex items-center gap-1.5 text-xs font-mono text-purple-300 hover:text-white uppercase tracking-wider"
+            >
+              <span>View All Financial Metrics</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {CASE_STUDIES.map((c, i) => (
-              <div key={i} className="p-8 border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 flex flex-col justify-between h-full">
-                <div className="space-y-4">
-                  <div className="text-xs font-mono text-zinc-500">{c.location}</div>
-                  <h3 className="text-xl font-medium">{c.client}</h3>
-                  <p className="text-sm text-zinc-600 dark:text-zinc-400">{c.scope}</p>
-                </div>
-                <div className="mt-8 pt-6 border-t border-zinc-200 dark:border-zinc-800 grid grid-cols-3 gap-4">
-                  {c.metrics.map((m, idx) => (
-                    <div key={idx}>
-                      <div className="text-lg font-medium">{m.value}</div>
-                      <div className="text-[10px] text-zinc-500 uppercase tracking-wide mt-1">{m.label}</div>
-                    </div>
-                  ))}
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-8 border border-purple-900/40 bg-[#0a0414] space-y-6">
+              <div className="text-[10px] font-mono text-purple-400 uppercase tracking-widest">
+                QSR RETAIL EXPANSION &middot; 50 LOCATIONS
               </div>
-            ))}
-          </div>
-        </section>
+              <div className="text-4xl font-bold text-white tracking-tight">+45%</div>
+              <div className="text-xs text-purple-300 uppercase tracking-wider">STOREFRONT FOOTFALL LIFT</div>
+              <p className="text-xs text-purple-200/70 font-light leading-relaxed">
+                30,000 sq.ft Noida plant fabricated identical 3D acrylic signage and storefront glazing across 50 Delhi NCR mall sites in 6 weeks.
+              </p>
+            </div>
 
-        {/* BOTTOM CTA */}
-        <section className="py-24 border-t border-zinc-200 dark:border-zinc-800 flex flex-col items-center text-center space-y-8">
-          <h2 className="text-4xl sm:text-5xl font-medium tracking-tight">Ready to deploy?</h2>
-          <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-xl">
-            Schedule a visit to our Noida Sector 63 plant or request an itemized quotation for your next expansion.
-          </p>
-          <Link
-            href="/grow-with-us"
-            className="inline-flex items-center justify-center px-10 py-5 bg-black text-white dark:bg-white dark:text-black font-medium transition-colors hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-sm text-base mt-4"
-          >
-            Start a Brief
-          </Link>
-        </section>
-      </main>
+            <div className="p-8 border border-purple-900/40 bg-[#0a0414] space-y-6">
+              <div className="text-[10px] font-mono text-purple-400 uppercase tracking-widest">
+                D2C APPAREL &amp; LIFESTYLE BRAND
+              </div>
+              <div className="text-4xl font-bold text-purple-300 tracking-tight">18MS</div>
+              <div className="text-xs text-purple-300 uppercase tracking-wider">EDGE SERVER TTFB LATENCY</div>
+              <p className="text-xs text-purple-200/70 font-light leading-relaxed">
+                Replaced bloated legacy web store with a custom Next.js 14 edge platform, increasing mobile checkout conversions by 3.8x.
+              </p>
+            </div>
+
+            <div className="p-8 border border-purple-900/40 bg-[#0a0414] space-y-6">
+              <div className="text-[10px] font-mono text-purple-400 uppercase tracking-widest">
+                HEALTHCARE DIAGNOSTIC CHAIN
+              </div>
+              <div className="text-4xl font-bold text-emerald-400 tracking-tight">1.8S</div>
+              <div className="text-xs text-purple-300 uppercase tracking-wider">WHATSAPP QUOTE DELIVERY</div>
+              <p className="text-xs text-purple-200/70 font-light leading-relaxed">
+                Automated dynamic PDF doctor appointment quotations and integrated patient CRM syncing with zero missed leads.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          8. MASTER BOTTOM CTA: CONVERSION ("GROW WITH US")
+         ========================================================================= */}
+      <section className="py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="p-10 sm:p-16 border border-purple-800/80 bg-gradient-to-br from-[#1b083d] via-[#100524] to-[#080214] text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
+            <div className="space-y-4 max-w-2xl">
+              <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-purple-900/50 border border-purple-700 text-purple-300 inline-block">
+                DIRECT NOIDA PLANT INTAKE
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white leading-tight">
+                Ready to manufacture or engineer your next venture?
+              </h2>
+              <p className="text-xs sm:text-sm text-purple-200/80 font-light leading-relaxed">
+                Book a direct visit to our Sector 63 Noida plant or receive an itemized technical proposal within 24 hours.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 shrink-0">
+              <Link
+                href="/grow-with-us"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-purple-50 text-purple-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-2xl"
+              >
+                <span>grow with us</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <a
+                href="https://wa.me/919876543210?text=Hi%20Busigrow!%20I'd%20like%20to%20grow%20with%20you."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-7 py-4 bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs uppercase tracking-wider transition-colors border border-purple-400/40"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>WhatsApp Desk</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <FooterSection />
     </div>
   )
 }
-

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation"
 import { Navbar } from "@/components/navbar"
 import FooterSection from "@/components/footer-section"
 import { EDITORIAL_ARTICLES } from "@/lib/busimag-data"
-import { ArrowLeft, Clock, ArrowRight, MessageSquare, Sparkles } from "lucide-react"
+import { ArrowLeft, Clock, ArrowRight, MessageSquare, BookOpen, Terminal, Sparkles } from "lucide-react"
 
 export async function generateStaticParams() {
   return EDITORIAL_ARTICLES.map((article) => ({
@@ -24,89 +24,101 @@ export default function ArticleDetailPage({
   }
 
   return (
-    <div className="w-full min-h-screen bg-background text-foreground font-sans relative overflow-x-hidden selection:bg-purple-500/20 selection:text-purple-600 dark:selection:text-purple-300">
+    <div className="w-full min-h-screen bg-[#070310] text-zinc-100 font-sans selection:bg-purple-600 selection:text-white">
       <Navbar />
 
-      {/* Ambient Radial Background Glows */}
-      <div className="fixed top-24 left-1/2 -translate-x-1/2 w-[850px] h-[550px] bg-purple-600/10 dark:bg-purple-600/15 blur-[140px] rounded-full pointer-events-none -z-10" />
-      <div className="fixed bottom-10 right-10 w-[450px] h-[450px] bg-violet-600/10 dark:bg-violet-600/15 blur-[130px] rounded-full pointer-events-none -z-10" />
+      {/* Top Reading Tracker Bar */}
+      <div className="fixed top-0 left-0 right-0 h-1 bg-purple-950 z-50">
+        <div className="h-full bg-gradient-to-r from-purple-500 to-violet-400 w-full" />
+      </div>
 
-      <main className="pt-28 pb-24 max-w-4xl mx-auto px-4 sm:px-6">
-        {/* Back Link */}
-        <div className="pt-4 pb-8">
+      <main className="pt-28 sm:pt-36 pb-24 max-w-4xl mx-auto px-4 sm:px-6">
+        {/* Back Link Strip */}
+        <div className="pt-2 pb-8 border-b border-purple-900/40 flex items-center justify-between font-mono text-xs text-purple-400">
           <Link
             href="/busimag"
-            className="inline-flex items-center gap-2 text-xs font-mono text-purple-700 dark:text-purple-300 hover:text-purple-900 dark:hover:text-purple-100 transition-colors p-2 rounded-xl bg-purple-50/50 dark:bg-purple-950/30 border border-purple-200/50 dark:border-purple-900/40"
+            className="inline-flex items-center gap-2 text-purple-300 hover:text-white uppercase tracking-wider transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Field Notes</span>
+            <span>&larr; Back to Editorial Desk</span>
           </Link>
+
+          <span className="hidden sm:inline text-zinc-500">
+            DISPATCH // NOIDA SECTOR 63 &middot; GURUGRAM
+          </span>
         </div>
 
-        <article className="space-y-8">
+        <article className="space-y-10 pt-8">
           {/* Header & Meta */}
-          <div className="space-y-5 pb-8 border-b border-purple-200/60 dark:border-purple-900/40">
-            <div className="flex flex-wrap items-center gap-2.5 text-xs font-mono text-purple-700/90 dark:text-purple-300/90">
-              <span className="px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-700 dark:text-purple-300 font-semibold shadow-sm">
+          <div className="space-y-6 pb-8 border-b border-purple-900/40">
+            <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono text-purple-400">
+              <span className="px-3 py-1 bg-purple-950 border border-purple-800 text-purple-300 uppercase tracking-widest font-semibold">
                 {article.category}
               </span>
               <span>&middot;</span>
               <span>{article.date}</span>
               <span>&middot;</span>
               <span className="flex items-center gap-1">
-                <Clock className="w-3 h-3" />
+                <Clock className="w-3.5 h-3.5" />
                 {article.readTime}
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-foreground leading-[1.12]">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase tracking-[-0.03em] text-white leading-[0.98]">
               {article.title}
             </h1>
 
-            <div className="flex items-center justify-between text-xs font-mono text-muted-foreground pt-2">
-              <span>By <strong className="text-foreground">{article.author}</strong> &middot; Busigrow Editorial Desk (NCR)</span>
+            <div className="flex flex-wrap items-center justify-between text-xs font-mono text-zinc-400 pt-2 border-t border-purple-900/30">
+              <span>By <strong className="text-purple-300">{article.author}</strong> // Principal Architect</span>
+              <span className="text-purple-400">DOCUMENT ID // BZ-2026-{article.slug.toUpperCase().slice(0, 8)}</span>
             </div>
           </div>
 
-          {/* Cover Image */}
-          <div className="rounded-3xl overflow-hidden border border-purple-200/60 dark:border-purple-900/50 bg-secondary aspect-[16/9] shadow-[0_0_30px_rgba(139,92,246,0.15)]">
+          {/* High-Contrast Grayscale Cover Image */}
+          <div className="border border-purple-900/60 bg-[#0c0618] overflow-hidden aspect-[16/9] relative group">
             <img
               src={article.image}
               alt={article.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
             />
+            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-[11px] font-mono text-purple-300 bg-black/80 px-3 py-1.5 border border-purple-900/60 backdrop-blur-md">
+              <span>FIG // FIELD AUDIT SPECIMEN</span>
+              <span className="text-emerald-400">VERIFIED ENGINEERING PROTOCOL</span>
+            </div>
           </div>
 
-          {/* Article Content */}
+          {/* Article Editorial Typography Content */}
           <div
-            className="prose prose-purple dark:prose-invert max-w-none text-muted-foreground leading-relaxed
-              prose-headings:text-foreground prose-headings:font-bold prose-headings:tracking-tight
-              prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:border-b prose-h2:border-purple-200/50 dark:prose-h2:border-purple-900/40 prose-h2:pb-2
-              prose-h3:text-lg prose-h3:mt-8 prose-h3:mb-3
-              prose-p:text-sm sm:prose-p:text-base prose-p:leading-relaxed prose-p:mb-5
-              prose-ul:text-sm prose-ul:my-4 prose-li:my-1
-              prose-blockquote:border-l-2 prose-blockquote:border-purple-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-foreground prose-blockquote:bg-purple-50/30 dark:prose-blockquote:bg-purple-950/20 prose-blockquote:p-4 prose-blockquote:rounded-r-2xl
-              prose-strong:text-foreground font-sans"
+            className="prose prose-invert max-w-none text-purple-200/80 leading-relaxed font-sans
+              prose-headings:text-white prose-headings:font-bold prose-headings:uppercase prose-headings:tracking-tight
+              prose-h2:text-2xl sm:prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:border-b prose-h2:border-purple-900/50 prose-h2:pb-3
+              prose-h3:text-lg sm:prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3 prose-h3:text-purple-300
+              prose-p:text-sm sm:prose-p:text-base prose-p:leading-relaxed prose-p:mb-6 prose-p:font-light
+              prose-ul:text-sm prose-ul:my-4 prose-li:my-1.5 prose-li:font-light
+              prose-blockquote:border-l-2 prose-blockquote:border-purple-500 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-purple-100 prose-blockquote:bg-purple-950/20 prose-blockquote:p-6 prose-blockquote:border-y prose-blockquote:border-r prose-blockquote:border-purple-900/40
+              prose-strong:text-white prose-strong:font-semibold"
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
 
           {/* Scoping CTA */}
-          <div className="mt-16 p-8 sm:p-10 rounded-3xl border border-purple-200/60 dark:border-purple-900/50 bg-gradient-to-br from-purple-50/70 via-card to-purple-100/40 dark:from-purple-950/40 dark:via-card dark:to-purple-900/20 text-foreground flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-[0_0_35px_rgba(139,92,246,0.15)]">
+          <div className="mt-16 p-8 sm:p-12 border border-purple-800 bg-[#120726] text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
             <div className="space-y-2 max-w-lg">
-              <h3 className="text-2xl sm:text-3xl font-bold tracking-tight">
-                Deploy this architecture for your brand
+              <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-purple-900/50 border border-purple-700 text-purple-300">
+                FABRICATION DIRECTIVE
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight">
+                Deploy this architecture for your brand.
               </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                Book a scoping session with our engineering and fabrication directors in Noida or Gurugram.
+              <p className="text-xs sm:text-sm text-purple-200/80 font-light leading-relaxed">
+                Consult with our engineering directors and software architects in Noida Sector 63 or Gurugram.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium shadow-[0_0_20px_rgba(139,92,246,0.4)] transition-all"
+                href="/grow-with-us"
+                className="inline-flex items-center gap-2 px-7 py-4 bg-white hover:bg-purple-50 text-purple-950 text-xs font-bold uppercase tracking-wider transition-colors shadow-xl"
               >
-                <span>Schedule Strategy Call</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <span>grow with us &rarr;</span>
               </Link>
             </div>
           </div>

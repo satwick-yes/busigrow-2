@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useState, useEffect } from "react"
-import Link from "next/link"
-import { Navbar } from "@/components/navbar"
-import FooterSection from "@/components/footer-section"
-import { motion, AnimatePresence } from "framer-motion"
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { Navbar } from '@/components/navbar'
+import FooterSection from '@/components/footer-section'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   ArrowRight,
   ArrowLeft,
@@ -19,410 +19,491 @@ import {
   Sparkles,
   Send,
   Zap,
-  CheckCircle2
-} from "lucide-react"
+  CheckCircle2,
+  Lock,
+  FileCode2,
+  Terminal,
+  Activity
+} from 'lucide-react'
 
-interface Answer {
-  [key: string]: string
-}
+const PROJECT_TYPES = [
+  { id: 'offline', label: 'Offline Signage & Fabrication', tag: 'PILLAR 01 // PHYSICAL', icon: '01' },
+  { id: 'online', label: 'Next.js App & UI/UX Systems', tag: 'PILLAR 02 // DIGITAL', icon: '02' },
+  { id: 'automations', label: 'WhatsApp CRM & Pipelines', tag: 'PILLAR 03 // AUTOMATION', icon: '03' },
+  { id: 'turnkey', label: 'Turnkey Venture Acquisition', tag: 'PILLAR 04 // VENTURES', icon: '04' }
+]
 
-const QUESTIONS = [
-  {
-    id: "service",
-    title: "What are you looking to build or scale?",
-    category: "Pillar Selection",
-    type: "options",
-    options: [
-      { id: "online", title: "Digital Platform & Ads", desc: "Next.js web apps, UI/UX systems, Meta & Google ad funnels" },
-      { id: "offline", title: "Physical Fabrication & Signage", desc: "Large-format UV printing, 3D channel letters, fleet wraps" },
-      { id: "automations", title: "Automations & WhatsApp Engines", desc: "CRM sync, WhatsApp intake bot, dynamic PDF quotes" },
-      { id: "tailored", title: "Turnkey Venture Acquisition", desc: "Pre-packaged digital brand, domain, SOPs, and 48h handover" },
-    ],
-  },
-  {
-    id: "timeline",
-    title: "What is your target launch timeline?",
-    category: "Execution Window",
-    type: "options",
-    options: [
-      { id: "urgent", title: "Immediate / Urgent (< 7 days)", desc: "Priority queue with dedicated night-shift dispatch" },
-      { id: "standard", title: "Standard Sprint (2–4 weeks)", desc: "Full scoping, prototyping, review, and deployment" },
-      { id: "quarter", title: "Strategic Roadmap (1–3 months)", desc: "Multi-store rollout or large-scale product architecture" },
-    ],
-  },
-  {
-    id: "budget",
-    title: "What is your planned budget range?",
-    category: "Commercial Scope",
-    type: "options",
-    options: [
-      { id: "starter", title: "₹50,000 – ₹2,00,000", desc: "Single storefront, campaign creative sprint, or basic web app" },
-      { id: "growth", title: "₹2,00,000 – ₹10,00,000", desc: "Multi-channel expansion, full fabrication rollout, or custom SaaS" },
-      { id: "enterprise", title: "₹10,00,000+", desc: "Pan-India physical rollout, venture acquisition, or enterprise platform" },
-    ],
-  },
-  {
-    id: "name",
-    title: "What is your name and company?",
-    category: "Point of Contact",
-    type: "text",
-    placeholder: "e.g. Vikram Sharma · Acme Retail Labs",
-  },
-  {
-    id: "email",
-    title: "What is your work email?",
-    category: "Communication",
-    type: "text",
-    placeholder: "you@company.com",
-  },
-  {
-    id: "phone",
-    title: "WhatsApp or phone number (optional)?",
-    category: "Instant Verification",
-    type: "text",
-    placeholder: "+91 98765 43210",
-    optional: true,
-  },
+const TIMELINES = [
+  { id: 'urgent', label: 'Urgent Dispatch (< 7 Days)', speed: 'P0 PRIORITY' },
+  { id: 'sprint', label: 'Standard Sprint (2–4 Weeks)', speed: 'P1 STANDARD' },
+  { id: 'roadmap', label: 'Enterprise Roadmap (1–3 Months)', speed: 'P2 STRATEGIC' }
 ]
 
 const DIRECT_CHANNELS = [
   {
     icon: MessageSquare,
-    label: "Direct WhatsApp Desk",
-    val: "+91 98765 43210",
-    desc: "Average response: < 3 minutes",
-    href: "https://wa.me/919876543210?text=Hi%20Busigrow%2C%20I%20would%20like%20to%20discuss%20a%20project.",
+    label: 'Meta Cloud WhatsApp Desk',
+    val: '+91 98765 43210',
+    desc: 'Average response: < 3 minutes SLA',
+    href: 'https://wa.me/919876543210?text=Hi%20Busigrow!%20I%20would%20like%20to%20scope%20a%20new%20project.'
   },
   {
     icon: Mail,
-    label: "Project Scoping Email",
-    val: "team@busigrow.com",
-    desc: "Direct inbox of engineering directors",
-    href: "mailto:team@busigrow.com",
+    label: 'Engineering Inbox',
+    val: 'team@busigrow.com',
+    desc: 'Direct inbox of principal architects',
+    href: 'mailto:team@busigrow.com'
   },
   {
     icon: MapPin,
-    label: "NCR Engineering & Fabrication",
-    val: "Sector 63, Noida, UP",
-    desc: "Active plant & design studio",
-    href: "https://maps.google.com",
-  },
+    label: 'Noida Sector 63 Plant',
+    val: 'Plot C-56/22, Sector 63, Noida',
+    desc: '30,000 sq.ft fabrication floor',
+    href: 'https://maps.google.com'
+  }
 ]
 
 export default function ContactPage() {
-  const [currentStep, setCurrentStep] = useState(0)
-  const [answers, setAnswers] = useState<Answer>({})
+  const [step, setStep] = useState(1)
+  const [projectType, setProjectType] = useState('offline')
+  const [timeline, setTimeline] = useState('sprint')
+  const [budget, setBudget] = useState(250000)
+  const [ndaRequired, setNdaRequired] = useState(true)
+
+  // Step 2 Fields
+  const [fullName, setFullName] = useState('')
+  const [company, setCompany] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [briefDetails, setBriefDetails] = useState('')
+
   const [submitted, setSubmitted] = useState(false)
-  const [textInput, setTextInput] = useState("")
-
-  useEffect(() => {
-    const question = QUESTIONS[currentStep]
-    if (question?.type === "text") {
-      setTextInput(answers[question.id] || "")
-    }
-  }, [currentStep, answers])
-
-  const currentQuestion = QUESTIONS[currentStep]
-
-  const selectOption = (optionId: string) => {
-    const nextAnswers = { ...answers, [currentQuestion.id]: optionId }
-    setAnswers(nextAnswers)
-  }
+  const [receiptId, setReceiptId] = useState('')
 
   const handleNext = () => {
-    if (currentQuestion.type === "text") {
-      if (!textInput.trim() && !currentQuestion.optional) {
-        return
-      }
-      setAnswers({ ...answers, [currentQuestion.id]: textInput.trim() })
-    }
-
-    if (currentStep < QUESTIONS.length - 1) {
-      setCurrentStep((prev) => prev + 1)
+    if (step === 1) {
+      setStep(2)
     } else {
+      const generatedId = `BZ-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`
+      setReceiptId(generatedId)
       setSubmitted(true)
     }
   }
 
-  const handlePrevious = () => {
-    if (currentStep > 0) {
-      setCurrentStep((prev) => prev - 1)
-    }
-  }
-
   return (
-    <div className="w-full min-h-screen bg-background text-foreground font-sans relative overflow-x-hidden selection:bg-purple-500/20 selection:text-purple-600 dark:selection:text-purple-300">
+    <div className="w-full min-h-screen bg-[#070310] text-zinc-100 font-sans selection:bg-purple-600 selection:text-white">
       <Navbar />
 
-      {/* Ambient Radial Background Glows */}
-      <div className="fixed top-24 left-1/2 -translate-x-1/2 w-[850px] h-[550px] bg-purple-600/10 dark:bg-purple-600/15 blur-[140px] rounded-full pointer-events-none -z-10" />
-      <div className="fixed bottom-10 right-10 w-[400px] h-[400px] bg-violet-600/10 dark:bg-violet-600/15 blur-[120px] rounded-full pointer-events-none -z-10" />
-
-      <main className="pt-28 pb-24 space-y-16 max-w-6xl mx-auto px-4 sm:px-6">
-
-        {/* HERO SECTION */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="pt-6 pb-10 border-b border-purple-200/60 dark:border-purple-900/40 relative"
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-xs font-mono text-purple-700 dark:text-purple-300 mb-6 shadow-[0_0_15px_rgba(139,92,246,0.15)]">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-600"></span>
+      {/* =========================================================================
+          1. HERO HEADER
+         ========================================================================= */}
+      <section className="pt-28 sm:pt-36 pb-12 border-b border-purple-900/40 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 space-y-6">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-[10px] font-mono tracking-widest uppercase px-3 py-1 bg-purple-950/80 border border-purple-800 text-purple-300">
+              COMMERCIAL INTAKE // SPRINT DIRECTIVE
             </span>
-            Project Scoping & Client Intake
+            <span className="text-[11px] font-mono text-purple-400 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              DESK STATUS: DIRECTORS ON DUTY &middot; SLA &lt; 2H
+            </span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground leading-[1.08] max-w-4xl mb-6">
-            Initiate a project brief or{" "}
-            <span className="bg-gradient-to-r from-purple-600 via-violet-600 to-purple-400 bg-clip-text text-transparent">
-              schedule a scoping session.
+          <h1 className="text-4xl sm:text-7xl lg:text-8xl font-black uppercase tracking-[-0.04em] text-white leading-[0.92]">
+            Grow With <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-400 to-violet-300">
+              Busigrow.
             </span>
           </h1>
 
-          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-            Direct access to our fabrication directors and software architects. Zero junior account managers. Response guaranteed within 2 hours.
+          <p className="text-sm sm:text-base md:text-lg text-purple-200/70 max-w-2xl font-light leading-relaxed">
+            Direct access to our fabrication directors in Noida Sector 63 and software engineers in Gurugram. Zero junior account executives. Guaranteed architectural proposal within 24 hours.
           </p>
-        </motion.section>
+        </div>
+      </section>
 
-        {/* 2-COLUMN LAYOUT: INTAKE STEPPER + DIRECT CHANNELS */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
-          {/* LEFT: INTERACTIVE SCOPING STEPPER */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.4 }}
-            className="lg:col-span-8 p-6 sm:p-10 rounded-3xl border border-purple-200/60 dark:border-purple-900/50 bg-card/90 backdrop-blur-md shadow-[0_0_35px_rgba(139,92,246,0.1)] relative"
-          >
-            {submitted ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="py-12 text-center space-y-5"
-              >
-                <div className="w-16 h-16 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center mx-auto text-purple-600 dark:text-purple-400 shadow-[0_0_25px_rgba(139,92,246,0.3)]">
-                  <CheckCircle2 className="w-8 h-8" />
-                </div>
-                <h3 className="text-3xl font-bold tracking-tight text-foreground">
-                  Project Brief Received
-                </h3>
-                <p className="text-sm sm:text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
-                  Thank you, <span className="font-semibold text-purple-600 dark:text-purple-400">{answers.name || "there"}</span>. An engineering director has received your parameters and will respond within 2 hours with an architectural pricing matrix.
-                </p>
-
-                <div className="p-5 rounded-2xl bg-purple-50/50 dark:bg-purple-950/30 border border-purple-200/50 dark:border-purple-900/50 max-w-md mx-auto text-left text-xs font-mono space-y-1.5 text-muted-foreground">
-                  <div><span className="text-foreground font-semibold">Service:</span> {answers.service || "Standard"}</div>
-                  <div><span className="text-foreground font-semibold">Timeline:</span> {answers.timeline || "Flexible"}</div>
-                  <div><span className="text-foreground font-semibold">Budget:</span> {answers.budget || "Custom"}</div>
-                  {answers.email && <div><span className="text-foreground font-semibold">Contact:</span> {answers.email}</div>}
-                </div>
-
-                <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
-                  <Link
-                    href="/"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-all"
-                  >
-                    <span>Return to Overview</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-
-                  <a
-                    href={`https://wa.me/919876543210?text=Hi%20Busigrow%2C%20I%20just%20submitted%20a%20project%20brief%20for%20${encodeURIComponent(answers.name || "my project")}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20 hover:bg-purple-500/20 text-xs font-medium transition-colors"
-                  >
-                    <MessageSquare className="w-3.5 h-3.5" />
-                    <span>Open in WhatsApp</span>
-                  </a>
-                </div>
-              </motion.div>
-            ) : (
-              <div className="space-y-8">
-                {/* Progress Bar & Stage Indicator */}
-                <div>
-                  <div className="flex items-center justify-between text-xs font-mono text-purple-700 dark:text-purple-300 pb-3">
-                    <span className="font-semibold uppercase tracking-wider">
-                      STEP {currentStep + 1} OF {QUESTIONS.length} &middot; {currentQuestion.category}
-                    </span>
-                    <span>{Math.round(((currentStep + 1) / QUESTIONS.length) * 100)}%</span>
+      {/* =========================================================================
+          2. INTERACTIVE BRIEF GENERATOR & FAST-LANE DESK
+         ========================================================================= */}
+      <section className="py-16 sm:py-24 border-b border-purple-900/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+            {/* Left Interactive Brief Stepper */}
+            <div className="lg:col-span-8 border border-purple-800 bg-[#090314] p-8 sm:p-12 shadow-2xl">
+              {submitted ? (
+                /* Cryptographic Brief Receipt */
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="space-y-8 font-mono text-xs"
+                >
+                  <div className="flex items-center justify-between border-b border-purple-900/60 pb-4">
+                    <div className="flex items-center gap-2 text-emerald-400">
+                      <CheckCircle2 className="w-5 h-5" />
+                      <span className="font-bold uppercase tracking-wider text-sm">
+                        BRIEF TRANSMITTED &middot; 200 OK
+                      </span>
+                    </div>
+                    <span className="text-purple-400">{receiptId}</span>
                   </div>
-                  <div className="w-full h-1.5 bg-purple-100 dark:bg-purple-950/60 rounded-full overflow-hidden">
+
+                  <div className="space-y-4 text-purple-200/90 font-light leading-relaxed">
+                    <p className="text-base text-white font-normal font-sans">
+                      Thank you, <strong className="text-purple-300">{fullName || 'Partner'}</strong>. Your brief has been dispatched directly to our engineering desk in Noida Sector 63.
+                    </p>
+                    <p>
+                      An engineering director is reviewing your substrate tolerances and software architecture scope. You will receive an itemized technical proposal and delivery timeline within 2 hours.
+                    </p>
+                  </div>
+
+                  {/* Structured Payload Matrix */}
+                  <div className="p-6 bg-[#05020c] border border-purple-900/60 space-y-3">
+                    <div className="text-[10px] text-purple-400 uppercase tracking-widest pb-2 border-b border-purple-900/40">
+                      RECORDED TELEMETRY PARAMETERS
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-zinc-300">
+                      <div><span className="text-purple-400">Project Vector:</span> {PROJECT_TYPES.find(p => p.id === projectType)?.label}</div>
+                      <div><span className="text-purple-400">Target Budget:</span> ₹{budget.toLocaleString('en-IN')}</div>
+                      <div><span className="text-purple-400">Execution Window:</span> {TIMELINES.find(t => t.id === timeline)?.label}</div>
+                      <div><span className="text-purple-400">NDA Protocol:</span> {ndaRequired ? 'CRYPTOGRAPHIC 100% ACTIVE' : 'STANDARD'}</div>
+                      <div><span className="text-purple-400">Client Org:</span> {company || 'Independent'}</div>
+                      <div><span className="text-purple-400">Direct Email:</span> {email}</div>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 flex flex-wrap items-center gap-4">
+                    <Link
+                      href="/"
+                      className="px-6 py-3 bg-purple-600 hover:bg-purple-500 text-white font-sans text-xs uppercase tracking-wider transition-colors font-medium"
+                    >
+                      Return to Plant Overview &rarr;
+                    </Link>
+
+                    <a
+                      href={`https://wa.me/919876543210?text=Hi%20Busigrow!%20I%20just%20submitted%20brief%20${receiptId}%20for%20${encodeURIComponent(company || fullName || 'my brand')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-3 border border-purple-800 text-purple-300 hover:bg-purple-950/60 text-xs uppercase tracking-wider transition-colors"
+                    >
+                      Accelerate via WhatsApp Desk
+                    </a>
+                  </div>
+                </motion.div>
+              ) : (
+                <div className="space-y-10">
+                  {/* Stepper Status Bar */}
+                  <div className="flex items-center justify-between font-mono text-xs border-b border-purple-900/40 pb-4">
+                    <div className="flex items-center gap-2 text-purple-400">
+                      <span className="w-2 h-2 rounded-full bg-purple-500" />
+                      <span className="font-semibold uppercase tracking-wider">
+                        {step === 1 ? 'PHASE 01 // ARCHITECTURAL PARAMETERS' : 'PHASE 02 // STAKEHOLDER TELEMETRY'}
+                      </span>
+                    </div>
+                    <span className="text-zinc-500">STAGE {step} / 02</span>
+                  </div>
+
+                  {step === 1 ? (
                     <motion.div
-                      className="h-full bg-gradient-to-r from-purple-600 to-violet-500 rounded-full"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${((currentStep + 1) / QUESTIONS.length) * 100}%` }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </div>
-                </div>
-
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentStep}
-                    initial={{ opacity: 0, x: 15 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -15 }}
-                    transition={{ duration: 0.25 }}
-                    className="space-y-6"
-                  >
-                    <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-                      {currentQuestion.title}
-                    </h2>
-
-                    {/* Options Selector */}
-                    {currentQuestion.type === "options" ? (
+                      key="step1"
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      className="space-y-8"
+                    >
+                      {/* Project Vector Pills */}
                       <div className="space-y-3">
-                        {currentQuestion.options?.map((option) => {
-                          const isSelected = answers[currentQuestion.id] === option.id
-                          return (
-                            <motion.button
-                              key={option.id}
-                              whileHover={{ y: -2 }}
-                              whileTap={{ scale: 0.99 }}
-                              onClick={() => selectOption(option.id)}
-                              className={`w-full text-left p-5 rounded-2xl border transition-all flex items-start justify-between gap-4 cursor-pointer ${
-                                isSelected
-                                  ? "bg-purple-50/80 dark:bg-purple-950/50 border-purple-500 shadow-[0_0_25px_rgba(139,92,246,0.2)] text-foreground"
-                                  : "bg-secondary/40 border-purple-200/50 dark:border-purple-900/40 hover:border-purple-400 dark:hover:border-purple-700 text-muted-foreground"
-                              }`}
-                            >
-                              <div>
-                                <div className="text-base font-semibold text-foreground mb-1">
-                                  {option.title}
-                                </div>
-                                <div className="text-xs text-muted-foreground leading-relaxed">
-                                  {option.desc}
-                                </div>
-                              </div>
-                              <div
-                                className={`w-5 h-5 rounded-full border shrink-0 mt-0.5 flex items-center justify-center transition-colors ${
+                        <label className="text-[11px] font-mono text-purple-400 uppercase tracking-widest block">
+                          01 // SELECT PRIMARY WORKSTREAM
+                        </label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          {PROJECT_TYPES.map((t) => {
+                            const isSelected = projectType === t.id
+                            return (
+                              <button
+                                key={t.id}
+                                type="button"
+                                onClick={() => setProjectType(t.id)}
+                                className={`p-4 border text-left transition-all cursor-pointer ${
                                   isSelected
-                                    ? "border-purple-600 bg-purple-600 text-white shadow-[0_0_10px_rgba(139,92,246,0.5)]"
-                                    : "border-purple-300 dark:border-purple-800"
+                                    ? 'border-purple-400 bg-[#14082c] shadow-lg'
+                                    : 'border-purple-900/50 bg-[#06020c] hover:border-purple-700'
                                 }`}
                               >
-                                {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
-                              </div>
-                            </motion.button>
-                          )
-                        })}
+                                <div className="flex items-center justify-between font-mono text-[10px] mb-1">
+                                  <span className="text-purple-400">{t.tag}</span>
+                                  {isSelected && <Check className="w-3.5 h-3.5 text-purple-300" />}
+                                </div>
+                                <div className="text-sm font-bold text-white font-sans">
+                                  {t.label}
+                                </div>
+                              </button>
+                            )
+                          })}
+                        </div>
                       </div>
-                    ) : (
-                      <div className="space-y-3">
+
+                      {/* Interactive Budget Slider */}
+                      <div className="space-y-4 pt-4 border-t border-purple-900/40">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-mono text-purple-400 uppercase tracking-widest">
+                            02 // TARGET BUDGET ALLOCATION
+                          </label>
+                          <span className="px-3 py-1 bg-purple-950 border border-purple-800 text-purple-300 font-mono font-bold text-sm">
+                            ₹{budget.toLocaleString('en-IN')}
+                          </span>
+                        </div>
                         <input
-                          type="text"
-                          value={textInput}
-                          onChange={(e) => setTextInput(e.target.value)}
-                          onKeyDown={(e) => e.key === "Enter" && handleNext()}
-                          placeholder={currentQuestion.placeholder}
-                          autoFocus
-                          className="w-full px-5 py-4 bg-secondary/60 border border-purple-200/70 dark:border-purple-900/60 rounded-2xl text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all font-mono shadow-sm"
+                          type="range"
+                          min="25000"
+                          max="2500000"
+                          step="25000"
+                          value={budget}
+                          onChange={(e) => setBudget(Number(e.target.value))}
+                          className="w-full accent-purple-500 cursor-pointer h-1.5 bg-purple-950 rounded-none"
                         />
-                        {currentQuestion.optional && (
-                          <p className="text-xs font-mono text-purple-700/80 dark:text-purple-400/80">
-                            Optional &middot; press Continue or Enter to skip
-                          </p>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Navigation Buttons */}
-                    <div className="flex items-center justify-between pt-6 border-t border-purple-200/50 dark:border-purple-900/40">
-                      <div>
-                        {currentStep > 0 && (
-                          <button
-                            onClick={handlePrevious}
-                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-mono text-purple-700 dark:text-purple-300 hover:bg-purple-500/10 transition-colors"
-                          >
-                            <ArrowLeft className="w-4 h-4" />
-                            <span>Previous Step</span>
-                          </button>
-                        )}
+                        <div className="flex justify-between font-mono text-[10px] text-zinc-500">
+                          <span>₹25K (Starter Prototype)</span>
+                          <span>₹5L (Mid-Scale Rollout)</span>
+                          <span>₹25L+ (Enterprise Multi-Store)</span>
+                        </div>
                       </div>
 
-                      <button
-                        onClick={handleNext}
-                        disabled={currentQuestion.type === "options" && !answers[currentQuestion.id]}
-                        className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-medium transition-all ${
-                          answers[currentQuestion.id] || currentQuestion.type === "text"
-                            ? "bg-purple-600 hover:bg-purple-700 text-white shadow-[0_0_20px_rgba(139,92,246,0.3)] cursor-pointer"
-                            : "bg-secondary text-muted-foreground border border-purple-200/40 dark:border-purple-900/40 cursor-not-allowed opacity-50"
-                        }`}
-                      >
-                        <span>{currentStep === QUESTIONS.length - 1 ? "Submit Project Brief" : "Continue"}</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            )}
-          </motion.div>
+                      {/* Timeline Selector */}
+                      <div className="space-y-3 pt-4 border-t border-purple-900/40">
+                        <label className="text-[11px] font-mono text-purple-400 uppercase tracking-widest block">
+                          03 // DEPLOYMENT WINDOW
+                        </label>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          {TIMELINES.map((t) => {
+                            const isSelected = timeline === t.id
+                            return (
+                              <button
+                                key={t.id}
+                                type="button"
+                                onClick={() => setTimeline(t.id)}
+                                className={`p-3.5 border text-left transition-all cursor-pointer ${
+                                  isSelected
+                                    ? 'border-purple-400 bg-[#14082c]'
+                                    : 'border-purple-900/50 bg-[#06020c] hover:border-purple-700'
+                                }`}
+                              >
+                                <div className="text-[10px] font-mono text-purple-400 mb-1">
+                                  {t.speed}
+                                </div>
+                                <div className="text-xs font-semibold text-white font-sans">
+                                  {t.label}
+                                </div>
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </div>
 
-          {/* RIGHT: DIRECT CONTACT CHANNELS */}
-          <div className="lg:col-span-4 space-y-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.4 }}
-              className="p-7 rounded-3xl border border-purple-200/60 dark:border-purple-900/50 bg-card/90 backdrop-blur-md space-y-5 shadow-[0_0_25px_rgba(139,92,246,0.1)]"
-            >
-              <div>
-                <span className="text-xs font-mono text-purple-700 dark:text-purple-400 font-semibold uppercase tracking-wider">Fast Lane</span>
-                <h3 className="text-lg font-bold tracking-tight text-foreground mt-1">
-                  Direct Channels
-                </h3>
-              </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Need an immediate quote, physical proof inspection, or instant NDA? Connect directly with our lead team.
-              </p>
+                      {/* NDA Protocol Toggle */}
+                      <div className="pt-4 border-t border-purple-900/40 flex items-center justify-between p-4 bg-[#05020c] border border-purple-900/50">
+                        <div className="flex items-center gap-3">
+                          <Lock className="w-4 h-4 text-purple-400 shrink-0" />
+                          <div>
+                            <div className="text-xs font-bold text-white uppercase font-mono">
+                              Mutual Cryptographic NDA Protocol
+                            </div>
+                            <div className="text-[10px] text-zinc-400 font-mono">
+                              Automated white-label non-disclosure agreement countersigned instantly.
+                            </div>
+                          </div>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={ndaRequired}
+                          onChange={(e) => setNdaRequired(e.target.checked)}
+                          className="w-4 h-4 accent-purple-500 cursor-pointer"
+                        />
+                      </div>
 
-              <div className="space-y-3 pt-1">
-                {DIRECT_CHANNELS.map((ch) => {
-                  const Icon = ch.icon
-                  return (
-                    <a
-                      key={ch.label}
-                      href={ch.href}
-                      target={ch.href.startsWith("http") ? "_blank" : undefined}
-                      rel="noreferrer"
-                      className="p-4 rounded-2xl bg-secondary/50 border border-purple-200/40 dark:border-purple-900/40 flex items-start gap-3.5 hover:border-purple-500/60 hover:shadow-[0_0_20px_rgba(139,92,246,0.15)] transition-all group block"
+                      <div className="pt-4 flex justify-end">
+                        <button
+                          type="button"
+                          onClick={handleNext}
+                          className="px-8 py-4 bg-purple-600 hover:bg-purple-500 text-white font-medium text-xs uppercase tracking-wider transition-colors inline-flex items-center gap-2 shadow-xl cursor-pointer"
+                        >
+                          <span>Proceed to Contact Details</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="step2"
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      className="space-y-8"
                     >
-                      <div className="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-600 dark:text-purple-400 group-hover:bg-purple-600 group-hover:text-white transition-colors shrink-0">
-                        <Icon className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-semibold text-foreground group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">{ch.label}</div>
-                        <div className="text-xs font-mono text-purple-700 dark:text-purple-300 mt-0.5">{ch.val}</div>
-                        <div className="text-[11px] font-mono text-muted-foreground mt-0.5">{ch.desc}</div>
-                      </div>
-                    </a>
-                  )
-                })}
-              </div>
-            </motion.div>
+                      {/* Form Inputs (Single bottom-border inputs) */}
+                      <div className="space-y-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-mono text-purple-400 uppercase tracking-widest">
+                              YOUR NAME *
+                            </label>
+                            <input
+                              type="text"
+                              value={fullName}
+                              onChange={(e) => setFullName(e.target.value)}
+                              placeholder="e.g. Vikram Sharma"
+                              required
+                              className="w-full bg-transparent border-b border-purple-800 focus:border-purple-400 text-white text-sm py-2 focus:outline-none font-mono"
+                            />
+                          </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
-              className="p-6 rounded-3xl border border-purple-200/60 dark:border-purple-900/50 bg-purple-500/5 backdrop-blur-md space-y-3"
-            >
-              <div className="flex items-center gap-2 text-xs font-mono text-purple-700 dark:text-purple-300 font-semibold">
-                <Clock className="w-4 h-4" />
-                <span>Service Level Guarantee</span>
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-mono text-purple-400 uppercase tracking-widest">
+                              COMPANY / BRAND NAME
+                            </label>
+                            <input
+                              type="text"
+                              value={company}
+                              onChange={(e) => setCompany(e.target.value)}
+                              placeholder="e.g. Nexus Retail Labs"
+                              className="w-full bg-transparent border-b border-purple-800 focus:border-purple-400 text-white text-sm py-2 focus:outline-none font-mono"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-mono text-purple-400 uppercase tracking-widest">
+                              WORK EMAIL *
+                            </label>
+                            <input
+                              type="email"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              placeholder="vikram@company.com"
+                              required
+                              className="w-full bg-transparent border-b border-purple-800 focus:border-purple-400 text-white text-sm py-2 focus:outline-none font-mono"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="text-[10px] font-mono text-purple-400 uppercase tracking-widest">
+                              PHONE / WHATSAPP (FOR DIRECT QUOTE)
+                            </label>
+                            <input
+                              type="tel"
+                              value={phone}
+                              onChange={(e) => setPhone(e.target.value)}
+                              placeholder="+91 98765 43210"
+                              className="w-full bg-transparent border-b border-purple-800 focus:border-purple-400 text-white text-sm py-2 focus:outline-none font-mono"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-mono text-purple-400 uppercase tracking-widest">
+                            PROJECT SPECIFICATION / TECHNICAL NOTES
+                          </label>
+                          <textarea
+                            rows={3}
+                            value={briefDetails}
+                            onChange={(e) => setBriefDetails(e.target.value)}
+                            placeholder="Describe dimensions, substrates, codebase requirements, or store locations..."
+                            className="w-full bg-transparent border-b border-purple-800 focus:border-purple-400 text-white text-sm py-2 focus:outline-none font-mono resize-none"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="pt-4 flex items-center justify-between border-t border-purple-900/40">
+                        <button
+                          type="button"
+                          onClick={() => setStep(1)}
+                          className="text-xs font-mono text-purple-400 hover:text-white uppercase transition-colors"
+                        >
+                          &larr; Back to Parameters
+                        </button>
+
+                        <button
+                          type="button"
+                          disabled={!email.trim() || !fullName.trim()}
+                          onClick={handleNext}
+                          className={`px-8 py-4 text-xs font-bold uppercase tracking-wider transition-colors inline-flex items-center gap-2 shadow-xl ${
+                            email.trim() && fullName.trim()
+                              ? 'bg-purple-600 hover:bg-purple-500 text-white cursor-pointer'
+                              : 'bg-purple-950 text-zinc-500 cursor-not-allowed border border-purple-900'
+                          }`}
+                        >
+                          <span>Transmit Brief to Directors</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Right Fast-Lane Desk */}
+            <div className="lg:col-span-4 space-y-6">
+              {/* Direct Channels Card */}
+              <div className="border border-purple-900/50 bg-[#090314] p-8 space-y-6">
+                <div>
+                  <span className="text-[10px] font-mono text-purple-400 uppercase tracking-widest">
+                    // SPRINT DESK
+                  </span>
+                  <h3 className="text-xl font-bold uppercase text-white font-sans mt-1">
+                    Direct Channels
+                  </h3>
+                </div>
+
+                <p className="text-xs text-purple-200/70 font-light leading-relaxed">
+                  Need immediate fabrication line clearance, physical material samples, or urgent same-night deployment?
+                </p>
+
+                <div className="space-y-4 pt-2">
+                  {DIRECT_CHANNELS.map((ch) => {
+                    const Icon = ch.icon
+                    return (
+                      <a
+                        key={ch.label}
+                        href={ch.href}
+                        target={ch.href.startsWith('http') ? '_blank' : undefined}
+                        rel="noreferrer"
+                        className="p-4 border border-purple-900/40 bg-[#05020c] flex items-start gap-3.5 hover:border-purple-500 transition-colors group block"
+                      >
+                        <div className="w-8 h-8 bg-purple-950 border border-purple-800 flex items-center justify-center text-purple-400 shrink-0 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="text-xs font-semibold text-white group-hover:text-purple-300 transition-colors uppercase font-sans">
+                            {ch.label}
+                          </div>
+                          <div className="text-xs font-mono text-purple-300 mt-0.5">
+                            {ch.val}
+                          </div>
+                          <div className="text-[10px] font-mono text-zinc-500 mt-0.5">
+                            {ch.desc}
+                          </div>
+                        </div>
+                      </a>
+                    )
+                  })}
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                All qualified briefs receive technical architecture blueprints and itemized commercial matrices within 24 hours.
-              </p>
-            </motion.div>
+
+              {/* SLA Guarantee Box */}
+              <div className="border border-purple-900/50 bg-[#05020c] p-6 space-y-3 font-mono text-xs">
+                <div className="flex items-center gap-2 text-purple-300 font-semibold uppercase text-[11px]">
+                  <Clock className="w-4 h-4 text-purple-400" />
+                  <span>SLA Guarantee Protocol</span>
+                </div>
+                <p className="text-[11px] text-zinc-400 font-light leading-relaxed">
+                  All submitted briefs receive architectural engineering audits, CAD/die-line specifications, and itemized commercial matrices within 24 hours.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-      </main>
+      </section>
 
       <FooterSection />
     </div>
